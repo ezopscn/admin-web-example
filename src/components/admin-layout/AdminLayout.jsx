@@ -8,8 +8,10 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { FooterText, Logo, LogoWithWhiteTitle } from '../../common/Resource.jsx';
 import { Outlet } from 'react-router';
+import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
+import { FooterText } from '../../common/Text.jsx';
+
 
 const { Header, Content, Footer, Sider } = Layout;
 
