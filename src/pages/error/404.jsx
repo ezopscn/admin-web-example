@@ -1,9 +1,13 @@
 import React from 'react';
+import NotFoundErrorImage from '../../assets/images/error/404.svg';
 
-const NotFound = () => {
+const NotFoundError = () => {
   return (
-    <>NotFound</>
-  )
-}
+    <>
+      <div className='error-code'>404</div>
+      <img src={NotFoundErrorImage} alt='' draggable='false' />
+    </>
+  );
+};
 
-export default NotFound;
+export default NotFoundError;

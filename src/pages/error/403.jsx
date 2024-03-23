@@ -1,9 +1,13 @@
 import React from 'react';
+import ForbiddenErrorImage from '../../assets/images/error/403.svg';
 
-const Forbidden = () => {
+const ForbiddenError = () => {
   return (
-    <>Forbidden</>
-  )
-}
+    <>
+      <div className='error-code'>403</div>
+      <img src={ForbiddenErrorImage} alt='' draggable='false' />
+    </>
+  );
+};
 
-export default Forbidden;
+export default ForbiddenError;

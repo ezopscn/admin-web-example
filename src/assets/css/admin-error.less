@@ -1,0 +1,63 @@
+.error-container {
+  height: 100vh;
+  max-height: 100vh;
+
+  .error-header {
+    height: 80px;
+    line-height: 80px;
+    padding: 0 30px;
+
+    img {
+      height: 30px;
+      user-select: none; // 禁止选中
+      -webkit-user-drag: none; // 禁止拖拽
+    }
+  }
+
+  .error-body {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    .error-info {
+      img {
+        position: relative;
+        width: 300px;
+        margin-bottom: 100px;
+        user-select: none;
+      }
+
+      .error-code {
+        position: fixed;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -55%);
+        font-size: 600px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        opacity: 0.05;
+        user-select: none;
+      }
+    }
+
+    .error-btn {
+      height: 35px;
+      width: 200px;
+      font-size: 17px;
+      letter-spacing: 3px;
+    }
+  }
+
+  .error-footer {
+    font-family: MiSans, serif;
+    font-size: 13px;
+    position: absolute;
+    bottom: 0;
+    padding: 24px 0;
+    width: 100%;
+    text-align: center;
+    color: #000000;
+  }
+}
