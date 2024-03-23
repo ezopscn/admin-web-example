@@ -1,0 +1,110 @@
+@import "./vars";
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+// 全局滚动条
+::-webkit-scrollbar-track-piece { //滚动条凹槽的颜色，还可以设置边框属性
+  background-color: #f8f8f8;
+}
+
+::-webkit-scrollbar { //滚动条的宽度
+  width: 8px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb { //滚动条的设置
+  background-color: #dddddd;
+  background-clip: padding-box;
+  min-height: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #bbb;
+}
+
+
+// Logo
+.admin-layout-logo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: @ADMIN-HEADER-HEIGHT;
+  line-height: @ADMIN-HEADER-HEIGHT;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  background-color: @ADMIN-MAIN-BG-COLOR;
+  text-align: center;
+
+  img {
+    height: @ADMIN-HEADER-HEIGHT;
+    line-height: @ADMIN-HEADER-HEIGHT;
+    padding: 12px 0;
+    user-select: none;
+  }
+}
+
+// Sider
+.admin-sider {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh; /* 设置固定高度为视口高度 */
+  overflow: auto; /* 添加滚动条 */
+}
+
+// 隐藏菜单滚动条
+.admin-sider::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+.admin-sider-menu::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+// 菜单
+.admin-sider-menu {
+  margin-top: calc(@ADMIN-HEADER-HEIGHT + 10px);
+  padding-bottom: calc(@ADMIN-HEADER-HEIGHT + 10px);
+  overflow-y: scroll;
+  grid-template-rows: 1fr;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  user-select: none;
+
+  // 文字
+  span {
+    letter-spacing: 1px;
+    color: #ffffff;
+  }
+}
+
+// Header
+.admin-header {
+  height: @ADMIN-HEADER-HEIGHT;
+  line-height: @ADMIN-HEADER-HEIGHT;
+  background-color: #ffffff;
+  box-shadow: @ADMIN-BOTTOM-BOX-SHADOW;
+  border-bottom: @ADMIN-BOTTOM-BOX-BORDER;
+  z-index: 1;
+  padding: 0 @ADMIN-BLANK-PADDING;
+  display: flex;
+  justify-content: space-between;
+}
+
+// 主题内容区
+.admin-content {
+  min-height: 200px;
+  background-color: #ffffff;
+}
+
+// 底部
+.admin-footer {
+  text-align: center;
+  background-color: #ffffff;
+}

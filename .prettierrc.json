@@ -2,5 +2,5 @@
   "singleQuote": true,
   "jsxBracketSameLine": true,
   "arrowParens": "always",
-  "printWidth": 400
+  "printWidth": 100
 }

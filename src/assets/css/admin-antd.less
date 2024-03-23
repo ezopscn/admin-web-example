@@ -1,0 +1,101 @@
+@import "./vars";
+
+// 按钮
+.ant-btn {
+  box-shadow: none;
+  line-height: @ADMIN-LINE-HEIGHT;
+  padding: 0 15px;
+}
+
+// 菜单间隔
+.ant-menu-inline .ant-menu-item,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical > .ant-menu-item,
+.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title {
+  margin-inline: 0;
+  margin-block: 0;
+  width: 100%;
+  height: @ADMIN-MENU-HEIGHT;
+  line-height: @ADMIN-MENU-HEIGHT;
+}
+
+// 菜单名称和图标间隔
+.ant-menu .ant-menu-item .ant-menu-item-icon + span,
+.ant-menu .ant-menu-submenu-title .ant-menu-item-icon + span,
+.ant-menu .ant-menu-item .anticon + span,
+.ant-menu .ant-menu-submenu-title .anticon + span {
+  margin-inline-start: 10px;
+  transition: none;
+}
+
+// 子菜单间隔
+.ant-menu-root > .ant-menu-item,
+.ant-menu-root > .ant-menu-submenu {
+  margin-top: 3px;
+}
+
+.ant-menu-root > .ant-menu-submenu > .ant-menu-sub {
+  padding: 5px 0;
+}
+
+// 菜单收起图标居中
+.ant-menu-inline-collapsed > .ant-menu-item,
+.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item,
+.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
+  padding: 0 calc(50% - 18px / 2);
+}
+
+// 菜单收起图标间隔
+.ant-menu-inline-collapsed .ant-menu-item,
+.ant-menu-inline-collapsed .ant-menu-submenu {
+  margin: 4px 0;
+}
+
+// 菜单图标
+.ant-menu .ant-menu-item .ant-menu-item-icon,
+.ant-menu .ant-menu-submenu-title .ant-menu-item-icon {
+  color: #ffffff;
+}
+
+.ant-menu-dark .ant-menu-item,
+.ant-menu-dark > .ant-menu .ant-menu-item,
+.ant-menu-dark .ant-menu-submenu-title,
+.ant-menu-dark > .ant-menu .ant-menu-submenu-title {
+  color: #ffffff;
+}
+
+// 收缩菜单动画
+.ant-layout-sider .ant-menu .ant-menu-item,
+.ant-layout-sider .ant-menu .ant-menu-submenu-title {
+  transition: none !important;
+}
+
+// 收缩菜单后的图标
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item .ant-menu-item-icon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item .ant-menu-item-icon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-item-icon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-item-icon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item .anticon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item .anticon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title .anticon,
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title .anticon {
+  font-size: 18px;
+}
+
+// 收缩菜单展开的配置
+.ant-menu-submenu-popup .ant-menu-vertical .ant-menu-item,
+.ant-menu-submenu-popup .ant-menu-vertical .ant-menu-submenu-title {
+  height: @ADMIN-SUBMENU-HEIGHT;
+  line-height: @ADMIN-SUBMENU-HEIGHT;
+  padding-inline: 20px;
+  margin-inline: 0;
+  margin-block: 0;
+  width: 100%;
+}
+
+.ant-menu-submenu-popup .ant-menu-vertical.ant-menu-sub {
+  padding: 5px 0;
+  min-width: auto;
+}
+

@@ -33,8 +33,8 @@ npm i @ant-design/icons
 npm i moment
 
 # 路由
-npm i react-router
-npm i react-router-dom
+npm i react-routes
+npm i react-routes-dom
 
 # 网络请求
 npm i axios
