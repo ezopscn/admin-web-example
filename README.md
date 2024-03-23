@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/badge/-React 18.2.0-blue?style=flat-square&logo=react&logoColor=white&link=mailto:ezops.cn@gmail.com" alt="">
   </a>
   <a>
-    <img src="https://img.shields.io/badge/-Ant Design 4.X-blue?style=flat-square&logo=antdesign&logoColor=white" alt="">
+    <img src="https://img.shields.io/badge/-Ant Design-blue?style=flat-square&logo=antdesign&logoColor=white" alt="">
   </a>
 </p>
 
@@ -26,7 +26,7 @@ npm i --save-dev @types/node
 npm i misans
 
 # UI 和图标
-npm i antd@4.24.14
+npm i antd
 npm i @ant-design/icons
 npm i moment
 
