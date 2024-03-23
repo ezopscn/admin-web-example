@@ -4,7 +4,7 @@
 
 <p align="center">
   <a>
-    <img src="https://img.shields.io/badge/-React 18.2.0-blue?style=flat-square&logo=react&logoColor=white&link=mailto:ezops.cn@gmail.com" alt="">
+    <img src="https://img.shields.io/badge/-React-blue?style=flat-square&logo=react&logoColor=white&link=mailto:ezops.cn@gmail.com" alt="">
   </a>
   <a>
     <img src="https://img.shields.io/badge/-Ant Design-blue?style=flat-square&logo=antdesign&logoColor=white" alt="">
@@ -19,11 +19,13 @@
 
 ```bash
 # 自动格式化代码
-npm i --save-dev --save-exact prettier
-npm i --save-dev @types/node 
+npm install -g prettier
 
 # 字体
 npm i misans
+
+# 样式
+npm i less less-loader
 
 # UI 和图标
 npm i antd
@@ -33,9 +35,6 @@ npm i moment
 # 路由
 npm i react-router
 npm i react-router-dom
-
-# 样式
-npm i less less-loader
 
 # 网络请求
 npm i axios
