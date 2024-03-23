@@ -4,10 +4,10 @@
 
 <p align="center">
   <a>
-    <img src="https://img.shields.io/badge/-React-blue?style=flat-square&logo=react&logoColor=white&link=mailto:ezops.cn@gmail.com" alt="">
+    <img src="https://img.shields.io/badge/-React 18.x-blue?style=flat-square&logo=react&logoColor=white&link=mailto:ezops.cn@gmail.com" alt="">
   </a>
   <a>
-    <img src="https://img.shields.io/badge/-Ant Design-blue?style=flat-square&logo=antdesign&logoColor=white" alt="">
+    <img src="https://img.shields.io/badge/-Ant Design 5.x-ff4d4f?style=flat-square&logo=antdesign&logoColor=white" alt="">
   </a>
 </p>
 
