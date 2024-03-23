@@ -20,6 +20,12 @@ const RouteData = [
       }
     ]
   },
+  // 无需登录
+  {
+    path: 'login',
+    element: RouteLazyLoad(React.lazy(() => import('../pages/login/Login.jsx'))),
+    notNeedAuth: true
+  },
   {
     path: 'error',
     element: <ErrorLayout />,
