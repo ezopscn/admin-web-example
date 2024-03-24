@@ -3,13 +3,15 @@ import {
   FileProtectOutlined,
   HomeOutlined,
   InsuranceOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   SettingOutlined,
   TeamOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
-import { Outlet } from 'react-router';
-import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
+import { Avatar, Button, Dropdown, Layout, Menu } from 'antd';
+import { Outlet, useNavigate } from 'react-router';
+import { DefaultAvatar, Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
 import { FooterText } from '../../common/Text.jsx';
 
 
@@ -48,12 +50,43 @@ const menuItems = [
 
 // 后台 Layout
 const AdminLayout = () => {
+  // 菜单跳转
+  const navigate = useNavigate();
+
   // 展开收起状态
   const [collapsed, setCollapsed] = useState(false);
 
   // 菜单宽度
   const menuWidth = 220;
   const menuCollapsedWidth = 60;
+
+  // 用户注销方法
+  const logoutHandler = () => {
+    console.log('logout');
+    navigate('/login');
+  };
+
+  // 下拉菜单
+  const dropdownItems = [
+    {
+      key: '1',
+      label: (<a rel='noopener noreferrer' href=''>Jayce（吴彦祖）</a>),
+      disabled: true
+    },
+    {
+      type: 'divider'
+    },
+    {
+      key: '2',
+      label: (<a rel='noopener noreferrer' onClick={() => {
+        navigate('/me');
+      }}>个人中心</a>)
+    },
+    {
+      key: '3',
+      label: (<a rel='noopener noreferrer' onClick={logoutHandler}>注销登录</a>)
+    }
+  ];
 
   return (
     <Layout>
@@ -74,7 +107,22 @@ const AdminLayout = () => {
               items={menuItems} />
       </Sider>
       <Layout>
-        <Header className='admin-header'></Header>
+        <Header className='admin-header'>
+          <div className='admin-header-left'>
+            <Button
+              type='text'
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+            />
+          </div>
+          <div className='admin-header-right'>
+            <div className='admin-header-dropdown'>
+              <Dropdown menu={{ items: dropdownItems }}>
+                <Avatar size={30} src={DefaultAvatar} />
+              </Dropdown>
+            </div>
+          </div>
+        </Header>
         <Content className='admin-content'>
           <Outlet />
         </Content>

@@ -1,9 +1,15 @@
 import React from 'react';
 import { Button } from 'antd';
+import DashboardHeader from './DashboardHeader.jsx';
 
 const Dashboard = () => {
   return (
-    <Button type='primary'>这是一个按钮</Button>
+    <>
+      <DashboardHeader/>
+      <div className="admin-main-content">
+        内容主体
+      </div>
+    </>
   );
 };
 
