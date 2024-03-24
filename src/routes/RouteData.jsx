@@ -17,6 +17,61 @@ const RouteData = [
       {
         path: 'dashboard',
         element: RouteLazyLoad(React.lazy(() => import('../pages/dashboard/Dashboard.jsx')))
+      },
+      {
+        path: 'users',
+        children: [
+          {
+            path: 'user',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/users/user/User.jsx')))
+          },
+          {
+            path: 'role',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/users/role/Role.jsx')))
+          },
+          {
+            path: 'department',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/users/department/Department.jsx')))
+          }
+        ]
+      },
+      {
+        path: 'system',
+        children: [
+          {
+            path: 'menu',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/menu/Menu.jsx')))
+          },
+          {
+            path: 'api',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/api/API.jsx')))
+          },
+          {
+            path: 'setting',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/setting/Setting.jsx')))
+          }
+        ]
+      },
+      {
+        path: 'log',
+        children: [
+          {
+            path: 'login',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/log/login/LoginLog.jsx')))
+          },
+          {
+            path: 'operation',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/log/operation/OperationLog.jsx')))
+          }
+        ]
+      },
+      {
+        path: 'me',
+        element: RouteLazyLoad(React.lazy(() => import('../pages/me/Me.jsx')))
+      },
+      {
+        path: 'help',
+        element: RouteLazyLoad(React.lazy(() => import('../pages/help/Help.jsx')))
       }
     ]
   },

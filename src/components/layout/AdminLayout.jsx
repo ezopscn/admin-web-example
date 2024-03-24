@@ -104,7 +104,10 @@ const AdminLayout = () => {
               theme='dark'
               defaultSelectedKeys={['1']}
               mode='inline'
-              items={menuItems} />
+              items={menuItems}
+              onClick={({ key }) => {
+                navigate(key);
+              }} />
       </Sider>
       <Layout>
         <Header className='admin-header'>

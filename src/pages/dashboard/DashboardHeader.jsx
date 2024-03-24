@@ -45,7 +45,7 @@ const DashboardHeader = () => {
       <div className='admin-dashboard-header-right'>
         <Statistic title='用户数量' value={1024} />
         <Statistic title='入职天数' value={2048} />
-        <Statistic title='集群数量' value={7} />
+        <Statistic title='集群数量' value={4096} />
       </div>
     </div>
   );
