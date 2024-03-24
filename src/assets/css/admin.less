@@ -178,6 +178,44 @@ html, body {
     }
   }
 
+  // Common Header
+  .admin-common-page-header {
+    padding: @ADMIN-BLANK-PADDING;
+    box-shadow: 0 2px 10px rgba(9, 30, 66, 0.05);
+    border-bottom: 1px solid rgba(9, 30, 66, 0.08);
+
+    .admin-common-page-header-box {
+      padding: 20px;
+      padding-bottom: 15px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      background-image: url("../../assets/images/background/bg.png");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-color: rgba(0, 0, 0, 0.02);
+
+      .admin-common-page-header-title {
+        height: 15px;
+        line-height: 15px;
+        font-size: 15px;
+        font-weight: bolder;
+        border-left: 4px solid #ed1c24;
+        padding-left: 8px;
+        margin-bottom: 15px;
+      }
+
+      .admin-common-page-header-content {
+        letter-spacing: 1px;
+        line-height: 25px;
+        color: #555555;
+
+        ul {
+          margin: 0;
+          padding-left: 30px;
+        }
+      }
+    }
+  }
+
   // 主体
   .admin-main-content {
     padding: @ADMIN-BLANK-PADDING;

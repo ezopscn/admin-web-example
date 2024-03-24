@@ -4,7 +4,10 @@ import React from 'react';
 const CommonPageHeader = (props) => {
   return (
     <div className="admin-common-page-header">
-      <h1>Hello World</h1>
+      <div className="admin-common-page-header-box">
+        <div className="admin-common-page-header-title">{props.title}</div>
+        <div className="admin-common-page-header-content">{props.tips}</div>
+      </div>
     </div>
   );
 };
