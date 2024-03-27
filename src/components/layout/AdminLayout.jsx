@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { FileProtectOutlined, HomeOutlined, InsuranceOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  FileProtectOutlined,
+  HomeOutlined,
+  InsuranceOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
+  UserOutlined
+} from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Layout, Menu } from 'antd';
 import { Outlet, useNavigate } from 'react-router';
 import { DefaultAvatar, Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
@@ -13,7 +21,7 @@ function getMenuItem(label, key, icon, children) {
     key,
     icon,
     children,
-    label,
+    label
   };
 }
 
@@ -21,17 +29,18 @@ function getMenuItem(label, key, icon, children) {
 const menuItems = [
   getMenuItem('工作空间', '/dashboard', <HomeOutlined />),
   getMenuItem('系统设置', '/system', <SettingOutlined />, [
+    getMenuItem('部门管理', '/system/department'),
     getMenuItem('用户管理', '/system/user'),
     getMenuItem('角色管理', '/system/role'),
-    getMenuItem('部门管理', '/system/department'),
     getMenuItem('菜单管理', '/system/menu'),
     getMenuItem('接口管理', '/system/api'),
     getMenuItem('授权管理', '/system/privilege'),
-    getMenuItem('服务配置', '/system/setting'),
+    getMenuItem('服务配置', '/system/setting')
   ]),
-  getMenuItem('日志审计', '/log', <InsuranceOutlined />, [getMenuItem('登录日志', '/log/login'), getMenuItem('操作日志', '/log/operation')]),
+  getMenuItem('日志审计', '/log',
+    <InsuranceOutlined />, [getMenuItem('登录日志', '/log/login'), getMenuItem('操作日志', '/log/operation')]),
   getMenuItem('个人中心', '/me', <UserOutlined />),
-  getMenuItem('获取帮助', '/help', <FileProtectOutlined />),
+  getMenuItem('获取帮助', '/help', <FileProtectOutlined />)
 ];
 
 // 后台 Layout
@@ -61,10 +70,10 @@ const AdminLayout = () => {
           Jayce（吴彦祖）
         </a>
       ),
-      disabled: true,
+      disabled: true
     },
     {
-      type: 'divider',
+      type: 'divider'
     },
     {
       key: '2',
@@ -76,7 +85,7 @@ const AdminLayout = () => {
           }}>
           个人中心
         </a>
-      ),
+      )
     },
     {
       key: '3',
@@ -84,8 +93,8 @@ const AdminLayout = () => {
         <a rel="noopener noreferrer" onClick={logoutHandler}>
           注销登录
         </a>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -93,7 +102,8 @@ const AdminLayout = () => {
       <div className="admin-layout-logo" style={{ width: collapsed ? menuCollapsedWidth + 'px' : menuWidth + 'px' }}>
         <img src={collapsed ? Logo : LogoWithWhiteTitle} alt="" />
       </div>
-      <Sider className="admin-sider" width={menuWidth} collapsedWidth={menuCollapsedWidth} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <Sider className="admin-sider" width={menuWidth} collapsedWidth={menuCollapsedWidth} collapsible
+             collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <Menu
           className="admin-sider-menu"
           theme="dark"
@@ -108,7 +118,8 @@ const AdminLayout = () => {
       <Layout>
         <Header className="admin-header">
           <div className="admin-header-left">
-            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
+            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={() => setCollapsed(!collapsed)} />
           </div>
           <div className="admin-header-right">
             <div className="admin-header-dropdown">

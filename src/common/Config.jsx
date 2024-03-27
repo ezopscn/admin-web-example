@@ -7,6 +7,8 @@ const APIConfig = {
   RunEnv: window.CONFIG.env,
   // 基础连接
   BaseURL: backendUrl,
+  // 2FA 状态接口
+  TowFAStatusAPI: backendUrl + '/2fa/status',
   // 登录接口
   LoginAPI: backendUrl + '/login',
   // 登出接口

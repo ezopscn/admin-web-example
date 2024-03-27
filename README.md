@@ -41,6 +41,12 @@ npm i axios
 
 # 数据
 npm i valtio
+
+# JWT Token 解析
+npm i jwt-decode
+
+# 双因子认证二维码
+npm i qrcode.react
 ```
 
 <br>
