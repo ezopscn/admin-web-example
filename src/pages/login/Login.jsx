@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { LogoWithBlackTitle } from '../../common/Image.jsx';
-import { Button, Checkbox, Divider, Form, Input, message } from 'antd';
+import { Button, Checkbox, Divider, Form, Input, message, Modal } from 'antd';
 import { DingtalkOutlined, InsuranceOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { FooterText } from '../../common/Text.jsx';
 import '../../assets/css/admin-login.less';
+import GoogleAuthLogo from '../../assets/images/app-logo/google.png';
+import MicrosoftAuthLogo from '../../assets/images/app-logo/microsoft.png';
+import VIPAccessAuthLogo from '../../assets/images/app-logo/vipaccess.png';
 import { GETTowFAStatusRequest } from '../../utils/RequestAPI.jsx';
-import { APIConfig } from '../../common/Config.jsx';
+import QRCode from 'qrcode.react';
 
 const Login = () => {
   // 路由跳转
@@ -14,6 +17,9 @@ const Login = () => {
 
   // 是否开启双因子认证
   const [towFAStatus, setTowFAStatus] = useState(false);
+  // 是否显示绑定模态框
+  const [showTowFAModal, setShowTowFAModal] = useState(true);
+  const oauthUrl = 'otpauth://totp/ADMIN-EXAMPLE:admin?algorithm=SHA1&digits=6&issuer=ADMIN-EXAMPLE&period=30&secret=UOOIXD4TUBHYVIXCFAV3TDTAPWCFVI7K';
 
   // 发起请求，获取后端是否开启双因子验证
   // 获取用户信息
@@ -78,7 +84,7 @@ const Login = () => {
                   </Form.Item>
 
                   {/*手机令牌方式*/}
-                  {towFAStatus ? <Form.Item className="login-form-item" name="code">
+                  {towFAStatus ? <Form.Item className="login-form-item" style={{marginBottom: "15px"}} name="code">
                     <Input autoComplete="off" className="login-input" prefix={<InsuranceOutlined />}
                            placeholder="手机令牌验证码，第一次登录不填" />
                   </Form.Item> : null}
@@ -131,6 +137,52 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <Modal title="双因子认证设备绑定" maskClosable={false} footer={null} open={showTowFAModal} onCancel={() => {
+        setShowTowFAModal(false);
+      }} centered>
+        <div className="admin-2fa-box">
+          <div className="admin-2fa-left">
+            <QRCode value={oauthUrl} />
+          </div>
+          <div className="admin-2fa-right">
+            <div>使用应用市场下载任意软件扫描二维码进行设备绑定：</div>
+            <div className="admin-download-item">
+              <img src={GoogleAuthLogo} alt="" />
+              <div className="admin-download-link">
+                <span>Google Authenticator</span>
+                <a target="_blank"
+                   href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh&gl=US">安卓版</a>
+                <span>/</span>
+                <a target="_blank" href="https://apps.apple.com/tw/app/google-authenticator/id388497605">IOS版</a>
+              </div>
+            </div>
+            <div className="admin-download-item">
+              <img src={MicrosoftAuthLogo} alt="" />
+              <div className="admin-download-link">
+                <span>Microsoft Authenticator</span>
+                <a target="_blank"
+                   href="https://play.google.com/store/apps/details?id=com.azure.authenticator&hl=zh&gl=US">安卓版</a>
+                <span>/</span>
+                <a target="_blank" href="https://apps.apple.com/tw/app/microsoft-authenticator/id983156458">IOS版</a>
+              </div>
+            </div>
+            <div className="admin-download-item">
+              <img src={VIPAccessAuthLogo} alt="" />
+              <div className="admin-download-link">
+                <span>VIP Access</span>
+                <a target="_blank"
+                   href="https://play.google.com/store/apps/details?id=com.verisign.mvip.main&hl=en">安卓版</a>
+                <span>/</span>
+                <a target="_blank" href="https://apps.apple.com/hk/app/vip-access-for-iphone/id307658513">IOS版</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Button type="primary" block onClick={() => {
+          setShowTowFAModal(false);
+        }}>我已完成设备绑定，现在去登录！</Button>
+      </Modal>
     </>
   );
 };
