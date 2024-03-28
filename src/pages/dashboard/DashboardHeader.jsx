@@ -1,6 +1,8 @@
 import React from 'react';
 import { DefaultAvatar } from '../../common/Image.jsx';
 import { Avatar, Statistic } from 'antd';
+import { useSnapshot } from 'valtio';
+import { UserStates } from '../../stores/Stores.jsx';
 
 // 问候语
 function getHelloWord(name) {
@@ -28,8 +30,11 @@ function getHelloWord(name) {
 }
 
 const DashboardHeader = () => {
+  // 当前用户信息
+  const { CurrentUserInfo } = useSnapshot(UserStates);
+
   // 问候语
-  let helloWord = getHelloWord("吴彦祖（Jayce）");
+  let helloWord = getHelloWord(CurrentUserInfo?.CNName + "（" + CurrentUserInfo?.ENName + "）");
 
   return (
     <div className='admin-dashboard-header'>

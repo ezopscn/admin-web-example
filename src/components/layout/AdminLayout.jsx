@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FileProtectOutlined,
   HomeOutlined,
@@ -8,10 +8,14 @@ import {
   SettingOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Layout, Menu } from 'antd';
+import { Avatar, Button, Dropdown, Layout, Menu, message } from 'antd';
 import { Outlet, useNavigate } from 'react-router';
-import { DefaultAvatar, Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
+import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
 import { FooterText } from '../../common/Text.jsx';
+import { LogoutRequest } from '../../utils/RequestAPI.jsx';
+import { jwtDecode } from 'jwt-decode';
+import { UserStates } from '../../stores/Stores.jsx';
+import { useSnapshot } from 'valtio';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -55,10 +59,32 @@ const AdminLayout = () => {
   const menuWidth = 220;
   const menuCollapsedWidth = 60;
 
+  // 解析 Token
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      UserStates.CurrentUserInfo = jwtDecode(token);
+    }
+  }, []);
+
+  // 当前用户信息
+  const { CurrentUserInfo } = useSnapshot(UserStates);
+
   // 用户注销方法
-  const logoutHandler = () => {
-    console.log('logout');
-    navigate('/login');
+  const logoutHandler = async () => {
+    try {
+      const res = await LogoutRequest();
+      if (res.code === 200) {
+        localStorage.clear();
+        navigate('/login');
+        message.success('注销成功');
+      } else {
+        message.error(res.message);
+      }
+    } catch (e) {
+      console.log(e);
+      message.error('服务器异常，请联系管理员');
+    }
   };
 
   // 下拉菜单
@@ -67,7 +93,7 @@ const AdminLayout = () => {
       key: '1',
       label: (
         <a rel="noopener noreferrer" href="">
-          Jayce（吴彦祖）
+          {CurrentUserInfo?.CNName}（{CurrentUserInfo?.ENName}）
         </a>
       ),
       disabled: true
@@ -124,7 +150,7 @@ const AdminLayout = () => {
           <div className="admin-header-right">
             <div className="admin-header-dropdown">
               <Dropdown menu={{ items: dropdownItems }}>
-                <Avatar size={30} src={DefaultAvatar} />
+                <Avatar size={30} src={CurrentUserInfo?.Avatar} />
               </Dropdown>
             </div>
           </div>

@@ -1,11 +1,14 @@
 import React from 'react';
 import { HashRouter } from 'react-router-dom';
-import RouteRules from './routes/RouteData.jsx';
+import { AuthRouter } from './routes/RouteMatch.jsx';
+import RouteRules from './routes/RouteRules.jsx';
 
 const App = () => {
   return (
     <HashRouter>
-      <RouteRules />
+      <AuthRouter>
+        <RouteRules />
+      </AuthRouter>
     </HashRouter>
   );
 };

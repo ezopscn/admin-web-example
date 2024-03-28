@@ -1,7 +1,7 @@
 import React from 'react';
 import RouteLazyLoad from './RouteLazyLoad.jsx';
 import AdminLayout from '../components/layout/AdminLayout.jsx';
-import { Navigate, useRoutes } from 'react-router';
+import { Navigate } from 'react-router';
 import ErrorLayout from '../components/error/ErrorLayout.jsx';
 
 // 路由列表
@@ -108,9 +108,5 @@ const RouteData = [
   }
 ];
 
-// 生成路由规则
-const RouteRules = () => {
-  return useRoutes(RouteData);
-};
+export default RouteData;
 
-export default RouteRules;
