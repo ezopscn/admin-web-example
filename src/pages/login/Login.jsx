@@ -29,6 +29,8 @@ const Login = () => {
         const res = await GETTowFAStatusRequest();
         if (res.code === 200) {
           setTowFAStatus(res.data?.status);
+        } else {
+          message.error(res.message)
         }
       } catch (e) {
         console.log(e);

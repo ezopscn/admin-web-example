@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DefaultAvatar } from '../../common/Image.jsx';
-import { Avatar, Statistic } from 'antd';
+import { Avatar, message, Statistic } from 'antd';
 import { useSnapshot } from 'valtio';
 import { UserStates } from '../../stores/Stores.jsx';
+import { GETRoleCountRequest, GETUserCountRequest } from '../../utils/RequestAPI.jsx';
 
 // 问候语
 function getHelloWord(name) {
@@ -34,23 +35,58 @@ const DashboardHeader = () => {
   const { CurrentUserInfo } = useSnapshot(UserStates);
 
   // 问候语
-  let helloWord = getHelloWord(CurrentUserInfo?.CNName + "（" + CurrentUserInfo?.ENName + "）");
+  let helloWord = getHelloWord(CurrentUserInfo?.CNName + '（' + CurrentUserInfo?.ENName + '）');
+
+  // 用户/角色总数
+  const [userCount, setUserCount] = useState(0);
+  const [roleCount, setRoleCount] = useState(0);
+  useEffect(() => {
+    // 用户统计
+    (async () => {
+      try {
+        const res = await GETUserCountRequest();
+        if (res.code === 200) {
+          setUserCount(res.data?.count);
+        } else {
+          message.error(res.message)
+        }
+      } catch (e) {
+        console.log(e);
+        message.error('服务器异常，请联系管理员');
+      }
+    })();
+
+    // 角色统计
+    (async () => {
+      try {
+        const res = await GETRoleCountRequest();
+        if (res.code === 200) {
+          setRoleCount(res.data?.count);
+        } else {
+          message.error(res.message)
+        }
+      } catch (e) {
+        console.log(e);
+        message.error('服务器异常，请联系管理员');
+      }
+    })();
+  }, []);
 
   return (
-    <div className='admin-dashboard-header'>
-      <div className='admin-dashboard-header-left'>
-        <div className='admin-dashboard-header-avatar'>
+    <div className="admin-dashboard-header">
+      <div className="admin-dashboard-header-left">
+        <div className="admin-dashboard-header-avatar">
           <Avatar size={60} src={DefaultAvatar} />
         </div>
-        <div className='admin-dashboard-header-info'>
-          <div className='admin-dashboard-header-hello'>{helloWord}</div>
-          <div className='admin-dashboard-header-job'>高级运维工程师 | 集团总部 - 研发中心 - 运维部 - 运维开发组</div>
+        <div className="admin-dashboard-header-info">
+          <div className="admin-dashboard-header-hello">{helloWord}</div>
+          <div className="admin-dashboard-header-job">高级运维工程师 | 集团总部 - 研发中心 - 运维部 - 运维开发组</div>
         </div>
       </div>
-      <div className='admin-dashboard-header-right'>
-        <Statistic title='用户数量' value={1024} />
-        <Statistic title='入职天数' value={2048} />
-        <Statistic title='集群数量' value={4096} />
+      <div className="admin-dashboard-header-right">
+        <Statistic title="用户数量" value={userCount} />
+        <Statistic title="角色数量" value={roleCount} />
+        <Statistic title="入职天数" value={4096} />
       </div>
     </div>
   );

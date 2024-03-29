@@ -1,63 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import {
-  FileProtectOutlined,
-  HomeOutlined,
-  InsuranceOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  SettingOutlined,
-  UserOutlined
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Layout, Menu, message } from 'antd';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
 import { FooterText } from '../../common/Text.jsx';
-import { LogoutRequest } from '../../utils/RequestAPI.jsx';
+import { GETCurrentRoleMenuListRequest, LogoutRequest } from '../../utils/RequestAPI.jsx';
 import { jwtDecode } from 'jwt-decode';
-import { UserStates } from '../../stores/Stores.jsx';
+import { LayoutStates, UserStates } from '../../stores/Stores.jsx';
 import { useSnapshot } from 'valtio';
+import { GenerateMenuTree } from '../../utils/MenuTree.jsx';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-// 合成菜单
-function getMenuItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label
-  };
-}
-
-// 菜单数据
-const menuItems = [
-  getMenuItem('工作空间', '/dashboard', <HomeOutlined />),
-  getMenuItem('系统设置', '/system', <SettingOutlined />, [
-    getMenuItem('部门管理', '/system/department'),
-    getMenuItem('用户管理', '/system/user'),
-    getMenuItem('角色管理', '/system/role'),
-    getMenuItem('菜单管理', '/system/menu'),
-    getMenuItem('接口管理', '/system/api'),
-    getMenuItem('授权管理', '/system/privilege'),
-    getMenuItem('服务配置', '/system/setting')
-  ]),
-  getMenuItem('日志审计', '/log',
-    <InsuranceOutlined />, [getMenuItem('登录日志', '/log/login'), getMenuItem('操作日志', '/log/operation')]),
-  getMenuItem('个人中心', '/me', <UserOutlined />),
-  getMenuItem('获取帮助', '/help', <FileProtectOutlined />)
-];
-
 // 后台 Layout
 const AdminLayout = () => {
-  // 菜单跳转
-  const navigate = useNavigate();
-
-  // 展开收起状态
-  const [collapsed, setCollapsed] = useState(false);
-
   // 菜单宽度
   const menuWidth = 220;
   const menuCollapsedWidth = 60;
+  // 菜单跳转
+  const navigate = useNavigate();
+  // 用于获取请求连接
+  const { pathname } = useLocation();
+  // 展开收起状态
+  const [collapsed, setCollapsed] = useState(false);
+  // 选中的菜单
+  const { MenuSiderCollapsed, MenuOpenKeys, MenuSelectKeys } = useSnapshot(LayoutStates);
 
   // 解析 Token
   useEffect(() => {
@@ -66,9 +33,71 @@ const AdminLayout = () => {
       UserStates.CurrentUserInfo = jwtDecode(token);
     }
   }, []);
-
-  // 当前用户信息
   const { CurrentUserInfo } = useSnapshot(UserStates);
+
+  // 查询菜单列表
+  const [menuList, setMenuList] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await GETCurrentRoleMenuListRequest();
+        if (res.code === 200) {
+          setMenuList(res.data?.list);
+        } else if (res.code === 1000) {
+          // Token 失效，退出登录
+          localStorage.clear();
+          navigate('/login');
+          message.warning('用户登录信息失效，请重新登录');
+        } else {
+          message.error(res.message);
+        }
+      } catch (e) {
+        console.log(e);
+        message.error('服务器异常，请联系管理员');
+      }
+    })();
+  }, []);
+  const menuTree = GenerateMenuTree(0, menuList);
+
+  const findKeyList = (key, menus) => {
+    const result = [];
+    let fmenu = {};
+    // 先找到对应的菜单
+    menus.forEach((menu) => {
+      if (menu.key === key) {
+        fmenu = menu;
+        result.push(key);
+      }
+    });
+    // 通过找到的菜单，查询它的所有上级菜单
+    const findMenu = (menu) => {
+      if (menu.parent_id !== 0) {
+        menus.forEach((item) => {
+          if (item.id === menu.parent_id) {
+            result.push(item.key);
+            findMenu(item);
+          }
+        });
+      }
+    };
+    findMenu(fmenu);
+    return result;
+  };
+
+  useEffect(() => {
+    if (menuList.length > 0) {
+      // 修改默认打开和选中菜单
+      let keys = findKeyList(pathname, menuList);
+      LayoutStates.MenuSelectKeys = keys;
+
+      // 解决收起菜单会弹出子菜单的问题
+      if (MenuSiderCollapsed) {
+        LayoutStates.MenuOpenKeys = [];
+      } else {
+        LayoutStates.MenuOpenKeys = keys;
+      }
+    }
+  }, [pathname, menuList]);
 
   // 用户注销方法
   const logoutHandler = async () => {
@@ -133,9 +162,18 @@ const AdminLayout = () => {
         <Menu
           className="admin-sider-menu"
           theme="dark"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys="['/dashboard']"
+          openKeys={MenuOpenKeys}
+          selectedKeys={MenuSelectKeys}
           mode="inline"
-          items={menuItems}
+          items={menuTree}
+          onOpenChange={(key) => {
+            // 解决 404 等页码第一次点击折叠菜单不展开和收起菜单栏不选中问题
+            // LayoutStates.MenuOpenKeys = [key[key.length - 1]];
+            LayoutStates.MenuOpenKeys = key;
+          }}
+          // 菜单点击事件，能够返回对应的 Key
+          // 文档中提示可获取到 item, key, keyPath, domEvent
           onClick={({ key }) => {
             navigate(key);
           }}
