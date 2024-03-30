@@ -34,14 +34,17 @@ function getHelloWord(name) {
 function getDepartmentName(currentDepartmentId, allDepartments) {
   // 找到当前部门
   const currentDepartment = allDepartments.find((department) => department.id === currentDepartmentId);
-  // 如果当前部门没有父部门，则直接返回当前部门名称
-  if (currentDepartment.parent_id === 0) {
-    return currentDepartment.name;
+  // 防止第一次加载报错
+  if (currentDepartment) {
+    // 如果当前部门没有父部门，则直接返回当前部门名称
+    if (currentDepartment.parent_id === 0) {
+      return currentDepartment.name;
+    }
+    // 递归获取父部门名称
+    const parentDepartmentName = getDepartmentName(currentDepartment.parent_id, allDepartments);
+    // 拼接部门名称
+    return `${parentDepartmentName} - ${currentDepartment?.name}`;
   }
-  // 递归获取父部门名称
-  const parentDepartmentName = getDepartmentName(currentDepartment.parent_id, allDepartments);
-  // 拼接部门名称
-  return `${parentDepartmentName} - ${currentDepartment.name}`;
 }
 
 const DashboardHeaderPage = () => {
@@ -50,7 +53,11 @@ const DashboardHeaderPage = () => {
   const { CurrentUserInfo } = useSnapshot(UserStates);
 
   // 问候语
-  let helloWord = getHelloWord(CurrentUserInfo?.CNName + '（' + CurrentUserInfo?.ENName + '）');
+  let helloWord = getHelloWord(CurrentUserInfo?.cn_name + '（' + CurrentUserInfo?.en_name + '）');
+  // 入职天数计算
+  const today = new Date();
+  const diffTime = today.getTime() - new Date(CurrentUserInfo?.join_time).getTime();
+  const joinDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
   // 用户/角色总数
   const [userCount, setUserCount] = useState(0);
@@ -69,7 +76,7 @@ const DashboardHeaderPage = () => {
         console.log(e);
         message.error('服务器异常，请联系管理员');
       }
-    })();
+    })(userCount, roleCount);
 
     // 角色统计
     (async () => {
@@ -94,7 +101,7 @@ const DashboardHeaderPage = () => {
       try {
         const res = await GETDepartmentListRequest();
         if (res.code === 200) {
-          const name = getDepartmentName(CurrentUserInfo?.DepartmentId, res.data?.list);
+          const name = getDepartmentName(CurrentUserInfo?.department_id, res.data?.list);
           setDepartmentName(name);
         } else {
           message.error(res.message);
@@ -104,7 +111,7 @@ const DashboardHeaderPage = () => {
         message.error('服务器异常，请联系管理员');
       }
     })();
-  }, []);
+  }, [departmentName]);
 
   return (
     <div className="admin-dashboard-header">
@@ -115,14 +122,14 @@ const DashboardHeaderPage = () => {
         <div className="admin-dashboard-header-info">
           <div className="admin-dashboard-header-hello">{helloWord}</div>
           <div className="admin-dashboard-header-job">
-            {CurrentUserInfo?.JobName} | {departmentName}
+            {CurrentUserInfo?.job_name} | {departmentName}
           </div>
         </div>
       </div>
       <div className="admin-dashboard-header-right">
         <Statistic title="用户数量" value={userCount} />
         <Statistic title="角色数量" value={roleCount} />
-        <Statistic title="入职天数" value={4096} />
+        <Statistic title="入职天数" value={joinDays} />
       </div>
     </div>
   );

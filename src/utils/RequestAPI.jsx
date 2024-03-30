@@ -8,8 +8,8 @@ export const LogoutRequest = () => GET(APIConfig.LogoutAPI); // 用户注销
 
 // 用户相关接口
 export const GETUserCountRequest = () => GET(APIConfig.UserCountAPI); // 获取用户数量
-export const GETCurrentUserCountRequest = () => GET(APIConfig.UserCountAPI); // 获取当前用户的信息
-export const GETSpecifyUserCountRequest = (username) => GET(APIConfig.UserCountAPI + username); // 获取指定用户的信息
+export const GETCurrentUserInfoRequest = () => GET(APIConfig.CurrentUserInfoAPI); // 获取当前用户的信息
+export const GETSpecifyUserInfoRequest = (username) => GET(APIConfig.SpecifyUserInfoAPI + username); // 获取指定用户的信息
 
 // 角色相关接口
 export const GETRoleCountRequest = () => GET(APIConfig.RoleCountAPI); // 获取角色数量

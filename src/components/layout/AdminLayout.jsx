@@ -4,7 +4,7 @@ import { App, Avatar, Button, Dropdown, Layout, Menu } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
 import { FooterText } from '../../common/Text.jsx';
-import { GETCurrentRoleMenuListRequest, LogoutRequest } from '../../utils/RequestAPI.jsx';
+import { GETCurrentRoleMenuListRequest, GETCurrentUserInfoRequest, LogoutRequest } from '../../utils/RequestAPI.jsx';
 import { jwtDecode } from 'jwt-decode';
 import { LayoutStates, UserStates } from '../../stores/Stores.jsx';
 import { useSnapshot } from 'valtio';
@@ -27,12 +27,26 @@ const AdminLayoutPage = () => {
   // 选中的菜单
   const { MenuSiderCollapsed, MenuOpenKeys, MenuSelectKeys } = useSnapshot(LayoutStates);
 
-  // 解析 Token
+  // 获取当前用户信息
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      UserStates.CurrentUserInfo = jwtDecode(token);
-    }
+    (async () => {
+      try {
+        const res = await GETCurrentUserInfoRequest();
+        if (res.code === 200) {
+          UserStates.CurrentUserInfo = res.data.info;
+        } else if (res.code === 1000) {
+          // Token 失效，退出登录
+          localStorage.clear();
+          navigate('/login');
+          message.warning('用户登录信息失效，请重新登录');
+        } else {
+          message.error(res.message);
+        }
+      } catch (e) {
+        console.log(e);
+        message.error('服务器异常，请联系管理员');
+      }
+    })();
   }, []);
   const { CurrentUserInfo } = useSnapshot(UserStates);
 
@@ -44,11 +58,6 @@ const AdminLayoutPage = () => {
         const res = await GETCurrentRoleMenuListRequest();
         if (res.code === 200) {
           setMenuList(res.data?.list);
-        } else if (res.code === 1000) {
-          // Token 失效，退出登录
-          localStorage.clear();
-          navigate('/login');
-          message.warning('用户登录信息失效，请重新登录');
         } else {
           message.error(res.message);
         }
@@ -123,7 +132,7 @@ const AdminLayoutPage = () => {
       key: '1',
       label: (
         <a rel="noopener noreferrer" href="">
-          {CurrentUserInfo?.CNName}（{CurrentUserInfo?.ENName}）
+          {CurrentUserInfo?.cn_name}（{CurrentUserInfo?.en_name}）
         </a>
       ),
       disabled: true,
@@ -187,7 +196,7 @@ const AdminLayoutPage = () => {
           <div className="admin-header-right">
             <div className="admin-header-dropdown">
               <Dropdown menu={{ items: dropdownItems }}>
-                <Avatar size={30} src={CurrentUserInfo?.Avatar} />
+                <Avatar size={30} src={CurrentUserInfo?.avatar} />
               </Dropdown>
             </div>
           </div>
