@@ -1,9 +1,14 @@
 import React from 'react';
+import { App } from 'antd';
 
-const Help = () => {
-  return (
-    <>Help</>
-  )
-}
+const HelpPage = () => {
+  return <>Help</>;
+};
+
+const Help = () => (
+  <App>
+    <HelpPage />
+  </App>
+);
 
 export default Help;

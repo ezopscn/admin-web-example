@@ -16,3 +16,6 @@ export const GETRoleCountRequest = () => GET(APIConfig.RoleCountAPI); // 获取�
 
 // 菜单相关接口
 export const GETCurrentRoleMenuListRequest = () => GET(APIConfig.CurrentRoleMenuListAPI); // 获取角色菜单列表
+
+// 部门相关接口
+export const GETDepartmentListRequest = () => GET(APIConfig.DepartmentListAPI); // 获取部门列表

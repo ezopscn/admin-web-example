@@ -1,5 +1,6 @@
 import React from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
+import { App } from 'antd';
 
 // 页面标题
 const Title = '用户管理 / USER MANAGEMENT';
@@ -16,7 +17,7 @@ const PageHeaderTips = () => {
   );
 };
 
-const User = () => {
+const UserPage = () => {
   return (
     <>
       <CommonPageHeader title={Title} tips={<PageHeaderTips />} />
@@ -24,5 +25,11 @@ const User = () => {
     </>
   );
 };
+
+const User = () => (
+  <App>
+    <UserPage />
+  </App>
+);
 
 export default User;

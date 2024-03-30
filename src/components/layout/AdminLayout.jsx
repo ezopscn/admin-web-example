@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Layout, Menu, message } from 'antd';
+import { App, Avatar, Button, Dropdown, Layout, Menu } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
 import { FooterText } from '../../common/Text.jsx';
@@ -13,7 +13,8 @@ import { GenerateMenuTree } from '../../utils/MenuTree.jsx';
 const { Header, Content, Footer, Sider } = Layout;
 
 // 后台 Layout
-const AdminLayout = () => {
+const AdminLayoutPage = () => {
+  const { message } = App.useApp();
   // 菜单宽度
   const menuWidth = 220;
   const menuCollapsedWidth = 60;
@@ -125,10 +126,10 @@ const AdminLayout = () => {
           {CurrentUserInfo?.CNName}（{CurrentUserInfo?.ENName}）
         </a>
       ),
-      disabled: true
+      disabled: true,
     },
     {
-      type: 'divider'
+      type: 'divider',
     },
     {
       key: '2',
@@ -140,7 +141,7 @@ const AdminLayout = () => {
           }}>
           个人中心
         </a>
-      )
+      ),
     },
     {
       key: '3',
@@ -148,8 +149,8 @@ const AdminLayout = () => {
         <a rel="noopener noreferrer" onClick={logoutHandler}>
           注销登录
         </a>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -157,8 +158,7 @@ const AdminLayout = () => {
       <div className="admin-layout-logo" style={{ width: collapsed ? menuCollapsedWidth + 'px' : menuWidth + 'px' }}>
         <img src={collapsed ? Logo : LogoWithWhiteTitle} alt="" />
       </div>
-      <Sider className="admin-sider" width={menuWidth} collapsedWidth={menuCollapsedWidth} collapsible
-             collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <Sider className="admin-sider" width={menuWidth} collapsedWidth={menuCollapsedWidth} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <Menu
           className="admin-sider-menu"
           theme="dark"
@@ -182,8 +182,7 @@ const AdminLayout = () => {
       <Layout>
         <Header className="admin-header">
           <div className="admin-header-left">
-            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                    onClick={() => setCollapsed(!collapsed)} />
+            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
           </div>
           <div className="admin-header-right">
             <div className="admin-header-dropdown">
@@ -203,5 +202,11 @@ const AdminLayout = () => {
     </Layout>
   );
 };
+
+const AdminLayout = () => (
+  <App>
+    <AdminLayoutPage />
+  </App>
+);
 
 export default AdminLayout;

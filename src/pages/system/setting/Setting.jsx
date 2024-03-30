@@ -1,5 +1,6 @@
 import React from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
+import { App } from 'antd';
 
 // 页面标题
 const Title = '服务配置 / SERVER SETTING';
@@ -14,7 +15,7 @@ const PageHeaderTips = () => {
   );
 };
 
-const Setting = () => {
+const SettingPage = () => {
   return (
     <>
       <CommonPageHeader title={Title} tips={<PageHeaderTips />} />
@@ -22,5 +23,11 @@ const Setting = () => {
     </>
   );
 };
+
+const Setting = () => (
+  <App>
+    <SettingPage />
+  </App>
+);
 
 export default Setting;

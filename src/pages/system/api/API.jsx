@@ -1,5 +1,6 @@
 import React from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
+import { App } from 'antd';
 
 // 页面标题
 const Title = '接口管理 / API MANAGEMENT';
@@ -15,7 +16,7 @@ const PageHeaderTips = () => {
   );
 };
 
-const API = () => {
+const APIPage = () => {
   return (
     <>
       <CommonPageHeader title={Title} tips={<PageHeaderTips />} />
@@ -23,5 +24,11 @@ const API = () => {
     </>
   );
 };
+
+const API = () => (
+  <App>
+    <APIPage />
+  </App>
+);
 
 export default API;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
+import { App } from 'antd';
 
 // 页面标题
 const Title = '授权管理 / PRIVILEGE MANAGEMENT';
@@ -13,7 +14,7 @@ const PageHeaderTips = () => {
   );
 };
 
-const Privilege = () => {
+const PrivilegePage = () => {
   return (
     <>
       <CommonPageHeader title={Title} tips={<PageHeaderTips />} />
@@ -21,5 +22,11 @@ const Privilege = () => {
     </>
   );
 };
+
+const Privilege = () => (
+  <App>
+    <PrivilegePage />
+  </App>
+);
 
 export default Privilege;

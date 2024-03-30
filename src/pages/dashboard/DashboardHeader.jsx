@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { DefaultAvatar } from '../../common/Image.jsx';
-import { Avatar, message, Statistic } from 'antd';
+import { App, Avatar, Statistic } from 'antd';
 import { useSnapshot } from 'valtio';
 import { UserStates } from '../../stores/Stores.jsx';
-import { GETRoleCountRequest, GETUserCountRequest } from '../../utils/RequestAPI.jsx';
+import { GETDepartmentListRequest, GETRoleCountRequest, GETUserCountRequest } from '../../utils/RequestAPI.jsx';
 
 // 问候语
 function getHelloWord(name) {
@@ -30,7 +30,22 @@ function getHelloWord(name) {
   return hello;
 }
 
-const DashboardHeader = () => {
+// 通过当前用户的部门 Id 获取所有父级部门的名称并拼接
+function getDepartmentName(currentDepartmentId, allDepartments) {
+  // 找到当前部门
+  const currentDepartment = allDepartments.find((department) => department.id === currentDepartmentId);
+  // 如果当前部门没有父部门，则直接返回当前部门名称
+  if (currentDepartment.parent_id === 0) {
+    return currentDepartment.name;
+  }
+  // 递归获取父部门名称
+  const parentDepartmentName = getDepartmentName(currentDepartment.parent_id, allDepartments);
+  // 拼接部门名称
+  return `${parentDepartmentName} - ${currentDepartment.name}`;
+}
+
+const DashboardHeaderPage = () => {
+  const { message } = App.useApp();
   // 当前用户信息
   const { CurrentUserInfo } = useSnapshot(UserStates);
 
@@ -48,7 +63,7 @@ const DashboardHeader = () => {
         if (res.code === 200) {
           setUserCount(res.data?.count);
         } else {
-          message.error(res.message)
+          message.error(res.message);
         }
       } catch (e) {
         console.log(e);
@@ -63,7 +78,26 @@ const DashboardHeader = () => {
         if (res.code === 200) {
           setRoleCount(res.data?.count);
         } else {
-          message.error(res.message)
+          message.error(res.message);
+        }
+      } catch (e) {
+        console.log(e);
+        message.error('服务器异常，请联系管理员');
+      }
+    })();
+  }, []);
+
+  // 部门信息
+  const [departmentName, setDepartmentName] = useState('');
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await GETDepartmentListRequest();
+        if (res.code === 200) {
+          const name = getDepartmentName(CurrentUserInfo?.DepartmentId, res.data?.list);
+          setDepartmentName(name);
+        } else {
+          message.error(res.message);
         }
       } catch (e) {
         console.log(e);
@@ -80,7 +114,9 @@ const DashboardHeader = () => {
         </div>
         <div className="admin-dashboard-header-info">
           <div className="admin-dashboard-header-hello">{helloWord}</div>
-          <div className="admin-dashboard-header-job">高级运维工程师 | 集团总部 - 研发中心 - 运维部 - 运维开发组</div>
+          <div className="admin-dashboard-header-job">
+            {CurrentUserInfo?.JobName} | {departmentName}
+          </div>
         </div>
       </div>
       <div className="admin-dashboard-header-right">
@@ -91,5 +127,11 @@ const DashboardHeader = () => {
     </div>
   );
 };
+
+const DashboardHeader = () => (
+  <App>
+    <DashboardHeaderPage />
+  </App>
+);
 
 export default DashboardHeader;

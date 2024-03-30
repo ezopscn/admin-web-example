@@ -1,5 +1,6 @@
 import React from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
+import { App } from 'antd';
 
 // 页面标题
 const Title = '操作日志 / OPERATION LOG';
@@ -13,7 +14,7 @@ const PageHeaderTips = () => {
   );
 };
 
-const OperationLog = () => {
+const OperationLogPage = () => {
   return (
     <>
       <CommonPageHeader title={Title} tips={<PageHeaderTips />} />
@@ -21,5 +22,11 @@ const OperationLog = () => {
     </>
   );
 };
+
+const OperationLog = () => (
+  <App>
+    <OperationLogPage />
+  </App>
+);
 
 export default OperationLog;
