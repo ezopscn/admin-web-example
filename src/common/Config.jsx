@@ -1,5 +1,4 @@
 // 后端接口前缀
-import { GETDepartmentListRequest } from '../utils/RequestAPI.jsx';
 
 const backendUrl = window.CONFIG.backendUrl;
 
@@ -18,6 +17,7 @@ const APIConfig = {
   RoleCountAPI: backendUrl + '/role/count', // 角色总数接口
   // 菜单相关
   CurrentRoleMenuListAPI: backendUrl + '/menu/list', // 当前角色菜单列表接口
+  AllMenuAPI: backendUrl + '/menu/all', // 获取所有菜单接口
   // 部门相关
   DepartmentListAPI: backendUrl + '/department/list', // 获取部门列表接口
 };

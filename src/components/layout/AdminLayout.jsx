@@ -5,7 +5,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router';
 import { Logo, LogoWithWhiteTitle } from '../../common/Image.jsx';
 import { FooterText } from '../../common/Text.jsx';
 import { GETCurrentRoleMenuListRequest, GETCurrentUserInfoRequest, LogoutRequest } from '../../utils/RequestAPI.jsx';
-import { jwtDecode } from 'jwt-decode';
 import { LayoutStates, UserStates } from '../../stores/Stores.jsx';
 import { useSnapshot } from 'valtio';
 import { GenerateMenuTree } from '../../utils/MenuTree.jsx';

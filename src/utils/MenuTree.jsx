@@ -8,7 +8,7 @@ function GetMenuItem(label, key, icon, children, type) {
     icon,
     children,
     label,
-    type
+    type,
   };
 }
 
@@ -26,7 +26,7 @@ function GenerateMenuTree(parentId, menus) {
         menu.label,
         menu.key,
         menu.icon ? ConvertTextToIcon(menu.icon) : null, // icon 问题
-        menu.children
+        menu.children,
       );
       newMenu.children = GenerateMenuTree(menu.id, menus);
       // 没有子菜单也显示下拉标识问题
@@ -39,4 +39,26 @@ function GenerateMenuTree(parentId, menus) {
   return tree;
 }
 
-export { ConvertTextToIcon, GenerateMenuTree };
+// 生成 Tree 结构的菜单树
+function GenerateTreeData(parentId, menus) {
+  const tree = [];
+  for (const menu of menus) {
+    if (menu.parent_id === parentId) {
+      const newMenu = {
+        title: menu.label,
+        key: menu.key,
+        children: menu.children,
+      };
+      newMenu.children = GenerateTreeData(menu.id, menus);
+      // 没有子菜单也显示下拉标识问题
+      if (newMenu.children.length === 0) {
+        newMenu.isLeaf = true;
+        delete newMenu.children;
+      }
+      tree.push(newMenu);
+    }
+  }
+  return tree;
+}
+
+export { ConvertTextToIcon, GenerateMenuTree, GenerateTreeData };

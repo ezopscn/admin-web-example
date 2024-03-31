@@ -1,17 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
-import { App, Button, Col, Row } from 'antd';
+import { Alert, App, Button, Col, Form, Input, Row, Space, Tree } from 'antd';
 import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
+import { GETAllMenuRequest } from '../../../utils/RequestAPI.jsx';
+import { GenerateTreeData } from '../../../utils/MenuTree.jsx';
 
 const { Search } = Input;
-import { Tree } from 'antd';
 
 const { DirectoryTree } = Tree;
 
+const layout = {
+  labelCol: {
+    span: 5,
+  },
+  wrapperCol: {
+    span: 19,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 5,
+    span: 19,
+  },
+};
+
 // 页面标题
 const Title = '菜单管理 / MENU MANAGEMENT';
-
 // 页面提示
 const PageHeaderTips = () => {
   return (
@@ -31,86 +46,40 @@ const PageHeaderTips = () => {
 };
 
 const MenuPage = () => {
+  const [form] = Form.useForm();
+
+  const onFinish = (values) => {
+    console.log(values);
+  };
+
+  const onReset = () => {
+    form.resetFields();
+  };
+
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
-  const treeData = [
-    {
-      title: '工作空间',
-      key: '/dashboard',
-      isLeaf: true,
-    },
-    {
-      title: '系统配置',
-      key: '/system',
-      children: [
-        {
-          title: '部门管理',
-          key: '/system/department',
-          isLeaf: true,
-        },
-        {
-          title: '用户管理',
-          key: '/system/user',
-          isLeaf: true,
-        },
-        {
-          title: '角色管理',
-          key: '/system/role',
-          isLeaf: true,
-        },
-        {
-          title: '菜单管理',
-          key: '/system/menu',
-          isLeaf: true,
-        },
-        {
-          title: '接口管理',
-          key: '/system/api',
-          isLeaf: true,
-        },
-        {
-          title: '授权管理',
-          key: '/system/privilege',
-          isLeaf: true,
-        },
-        {
-          title: '服务配置',
-          key: '/system/setting',
-          isLeaf: true,
-        },
-      ],
-    },
-    {
-      title: '日志审计',
-      key: '/log',
-      children: [
-        {
-          title: '登录日志',
-          key: '/log/login',
-          isLeaf: true,
-        },
-        {
-          title: '操作日志',
-          key: '/log/operation',
-          isLeaf: true,
-        },
-      ],
-    },
-    {
-      title: '个人中心',
-      key: '/me',
-      isLeaf: true,
-    },
-    {
-      title: '获取帮助',
-      key: '/help',
-      isLeaf: true,
-    },
-  ];
+  // 获取所有菜单列表
+  const [menuList, setMenuList] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await GETAllMenuRequest();
+        if (res.code === 200) {
+          setMenuList(res.data?.menus);
+        } else {
+          message.error(res.message);
+        }
+      } catch (e) {
+        console.log(e);
+        message.error('服务器异常，请联系管理员');
+      }
+    })();
+  }, []);
 
-  const onSelect = (keys, info) => {
-    console.log('Trigger Select', keys, info);
-  };
+  let treeData = [];
+  if (menuList) {
+    treeData = GenerateTreeData(0, menuList);
+  }
 
   // 获取所有父级菜单的 Key
   function getNonLeafKeys(treeData) {
@@ -147,6 +116,26 @@ const MenuPage = () => {
     setExpandedKeys(keys);
   };
 
+  // 菜单信息
+  const [menuInfo, setMenuInfo] = useState({});
+
+  const onSelect = (keys, _) => {
+    for (const menu of menuList) {
+      if (menu.key === keys[0]) {
+        setMenuInfo(menu);
+      }
+    }
+  };
+
+  // 初始化数据
+  useEffect(() => {
+    form.setFieldsValue({
+      label: menuInfo?.label,
+      key: menuInfo?.key,
+      icon: menuInfo?.icon,
+    });
+  }, [menuInfo]);
+
   return (
     <>
       <CommonPageHeader title={Title} tips={<PageHeaderTips />} />
@@ -175,7 +164,73 @@ const MenuPage = () => {
           <Col className="admin-main-content-right" span={18}>
             <div className="admin-detail">
               <div className="admin-content-header">编辑菜单</div>
-              <div className="admin-content-box">菜单详情数据</div>
+              <div className="admin-content-box">
+                <div style={{ marginBottom: menuInfo?.label ? '20px' : '0' }}>
+                  <Alert message="点击菜单列表任意一项后，可进行编辑" type="info" showIcon />
+                </div>
+                <div>
+                  {menuInfo?.label ? (
+                    <Form {...layout} form={form} name="menu-info" onFinish={onFinish}>
+                      <Form.Item
+                        name="label"
+                        label="名称"
+                        extra="这是关于该字段的一些说明."
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name="key"
+                        label="路径"
+                        extra="这是关于该字段的一些说明."
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name="icon"
+                        label="图标"
+                        extra="这是关于该字段的一些说明."
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name="parent"
+                        label="父级菜单"
+                        extra="这是关于该字段的一些说明."
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item {...tailLayout}>
+                        <Space>
+                          <Button type="primary" htmlType="submit">
+                            保存修改
+                          </Button>
+                          <Button htmlType="button" onClick={onReset}>
+                            重置数据
+                          </Button>
+                        </Space>
+                      </Form.Item>
+                    </Form>
+                  ) : (
+                    <Form form={form}></Form>
+                  )}
+                </div>
+              </div>
             </div>
           </Col>
         </Row>

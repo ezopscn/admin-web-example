@@ -8,7 +8,7 @@ import ErrorLayout from '../components/error/ErrorLayout.jsx';
 const RouteData = [
   {
     path: '/',
-    element: <Navigate to="/dashboard" />
+    element: <Navigate to="/dashboard" />,
   },
   {
     path: '/',
@@ -16,69 +16,69 @@ const RouteData = [
     children: [
       {
         path: 'dashboard',
-        element: RouteLazyLoad(React.lazy(() => import('../pages/dashboard/Dashboard.jsx')))
+        element: RouteLazyLoad(React.lazy(() => import('../pages/dashboard/Dashboard.jsx'))),
       },
       {
         path: 'system',
         children: [
           {
             path: 'department',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/department/Department.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/department/Department.jsx'))),
           },
           {
             path: 'user',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/user/User.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/user/User.jsx'))),
           },
           {
             path: 'role',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/role/Role.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/role/Role.jsx'))),
           },
           {
             path: 'menu',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/menu/Menu.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/menu/Menu.jsx'))),
           },
           {
             path: 'api',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/api/API.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/api/API.jsx'))),
           },
           {
             path: 'privilege',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/privilege/Privilege.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/privilege/Privilege.jsx'))),
           },
           {
             path: 'setting',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/system/setting/Setting.jsx')))
-          }
-        ]
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/setting/Setting.jsx'))),
+          },
+        ],
       },
       {
         path: 'log',
         children: [
           {
             path: 'login',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/log/login/LoginLog.jsx')))
+            element: RouteLazyLoad(React.lazy(() => import('../pages/log/login/LoginLog.jsx'))),
           },
           {
             path: 'operation',
-            element: RouteLazyLoad(React.lazy(() => import('../pages/log/operation/OperationLog.jsx')))
-          }
-        ]
+            element: RouteLazyLoad(React.lazy(() => import('../pages/log/operation/OperationLog.jsx'))),
+          },
+        ],
       },
       {
         path: 'me',
-        element: RouteLazyLoad(React.lazy(() => import('../pages/me/Me.jsx')))
+        element: RouteLazyLoad(React.lazy(() => import('../pages/me/Me.jsx'))),
       },
       {
         path: 'help',
-        element: RouteLazyLoad(React.lazy(() => import('../pages/help/Help.jsx')))
-      }
-    ]
+        element: RouteLazyLoad(React.lazy(() => import('../pages/help/Help.jsx'))),
+      },
+    ],
   },
   // 无需登录
   {
     path: 'login',
     element: RouteLazyLoad(React.lazy(() => import('../pages/login/Login.jsx'))),
-    notNeedAuth: true
+    notNeedAuth: true,
   },
   {
     path: 'error',
@@ -87,26 +87,25 @@ const RouteData = [
       {
         path: '403',
         element: RouteLazyLoad(React.lazy(() => import('../pages/error/403.jsx'))),
-        notNeedAuth: true // 无需登录标识
+        notNeedAuth: true, // 无需登录标识
       },
       {
         path: '404',
         element: RouteLazyLoad(React.lazy(() => import('../pages/error/404.jsx'))),
-        notNeedAuth: true
+        notNeedAuth: true,
       },
       {
         path: '500',
         element: RouteLazyLoad(React.lazy(() => import('../pages/error/500.jsx'))),
-        notNeedAuth: true
-      }
-    ]
+        notNeedAuth: true,
+      },
+    ],
   },
   {
     path: '*',
     element: <Navigate to="/error/404" />,
-    notNeedAuth: true
-  }
+    notNeedAuth: true,
+  },
 ];
 
 export default RouteData;
-

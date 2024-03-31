@@ -4,8 +4,8 @@ import { Spin } from 'antd';
 // 加载中图标
 const RouteLoading = () => {
   return (
-    <div className='admin-loading'>
-      <Spin size='large' />
+    <div className="admin-loading">
+      <Spin size="large" />
     </div>
   );
 };

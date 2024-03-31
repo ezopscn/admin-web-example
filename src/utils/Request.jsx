@@ -4,29 +4,29 @@ import axios from 'axios';
 
 const instance = axios.create({
   // 请求超时时间
-  timeout: 5000
+  timeout: 5000,
 });
 
 // 请求拦截器
 instance.interceptors.request.use(
-  function(config) {
+  function (config) {
     // 在请求头中添加 Token
     config.headers.Authorization = 'Bearer ' + GetToken();
     return config;
   },
-  function(error) {
+  function (error) {
     return Promise.reject(error);
-  }
+  },
 );
 
 // 响应拦截器
 instance.interceptors.response.use(
-  function(response) {
+  function (response) {
     return response;
   },
-  function(error) {
+  function (error) {
     return Promise.reject(error);
-  }
+  },
 );
 
 // GET 请求

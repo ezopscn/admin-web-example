@@ -7,5 +7,5 @@ export {
   Logo, // Logo，生成器：https://www.designevo.com/cn/logo-maker/
   LogoWithWhiteTitle, // 带标题的白色 Logo
   LogoWithBlackTitle, // 带标题的黑色 Logo
-  DefaultAvatar //默认头像
+  DefaultAvatar, //默认头像
 };

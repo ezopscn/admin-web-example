@@ -8,23 +8,23 @@ const ErrorLayout = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className='error-container'>
-        <div className='error-header'>
-          <img src={LogoWithBlackTitle} alt='' draggable='false' />
+      <div className="error-container">
+        <div className="error-header">
+          <img src={LogoWithBlackTitle} alt="" draggable="false" />
         </div>
-        <div className='error-body'>
-          <div className='error-info'>
+        <div className="error-body">
+          <div className="error-info">
             <div>
               <Outlet />
             </div>
             <div>
-              <Button onClick={() => navigate('/')} className='error-btn' type='primary'>
+              <Button onClick={() => navigate('/')} className="error-btn" type="primary">
                 返回首页
               </Button>
             </div>
           </div>
         </div>
-        <div className='error-footer'>
+        <div className="error-footer">
           <FooterText />
         </div>
       </div>
