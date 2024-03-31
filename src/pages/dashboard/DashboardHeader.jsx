@@ -111,7 +111,7 @@ const DashboardHeaderPage = () => {
         message.error('服务器异常，请联系管理员');
       }
     })();
-  }, [departmentName]);
+  }, [departmentName, CurrentUserInfo]);
 
   return (
     <div className="admin-dashboard-header">
