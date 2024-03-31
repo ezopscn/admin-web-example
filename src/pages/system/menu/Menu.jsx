@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
-import { Alert, App, Button, Col, Form, Input, Row, Space, Tree } from 'antd';
+import { Alert, App, Button, Col, Form, Input, InputNumber, Row, Select, Space, Tree } from 'antd';
 import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { GETAllMenuRequest } from '../../../utils/RequestAPI.jsx';
 import { GenerateTreeData } from '../../../utils/MenuTree.jsx';
@@ -45,6 +45,7 @@ const PageHeaderTips = () => {
   );
 };
 
+// 参考页面：https://arco.naiveadmin.com/system/menu
 const MenuPage = () => {
   const [form] = Form.useForm();
 
@@ -82,7 +83,7 @@ const MenuPage = () => {
   }
 
   // 获取所有父级菜单的 Key
-  function getNonLeafKeys(treeData) {
+  const getNonLeafKeys = (treeData) => {
     const keys = [];
 
     function traverse(data) {
@@ -96,12 +97,11 @@ const MenuPage = () => {
 
     traverse(treeData);
     return keys;
-  }
+  };
 
   // 展开的菜单
   const [expandedKeys, setExpandedKeys] = useState([]);
-
-  function handleExpand() {
+  const handleExpand = () => {
     if (expandedKeys.length) {
       // 收起菜单
       setExpandedKeys([]);
@@ -110,7 +110,7 @@ const MenuPage = () => {
       let keys = getNonLeafKeys(treeData);
       setExpandedKeys(keys);
     }
-  }
+  };
 
   const onExpand = (keys, _) => {
     setExpandedKeys(keys);
@@ -118,7 +118,6 @@ const MenuPage = () => {
 
   // 菜单信息
   const [menuInfo, setMenuInfo] = useState({});
-
   const onSelect = (keys, _) => {
     for (const menu of menuList) {
       if (menu.key === keys[0]) {
@@ -127,14 +126,33 @@ const MenuPage = () => {
     }
   };
 
-  // 初始化数据
+  // 初始化回填表单数据
   useEffect(() => {
     form.setFieldsValue({
       label: menuInfo?.label,
       key: menuInfo?.key,
       icon: menuInfo?.icon,
+      sort: menuInfo?.sort,
+      parent_id: menuInfo?.parent_id,
     });
   }, [menuInfo]);
+
+  // 生成筛选菜单列表
+  let parentMenuSelectItems = [{ label: '顶级菜单', value: 0 }];
+  if (menuList) {
+    for (const menu of menuList) {
+      parentMenuSelectItems.push({ label: menu.label, value: menu.id });
+    }
+  }
+
+  const onParentMenuChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onParentMenuSearch = (value) => {
+    console.log('search:', value);
+  };
+
+  const parentMenuFilterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
   return (
     <>
@@ -165,7 +183,7 @@ const MenuPage = () => {
             <div className="admin-detail">
               <div className="admin-content-header">编辑菜单</div>
               <div className="admin-content-box">
-                <div style={{ marginBottom: menuInfo?.label ? '20px' : '0' }}>
+                <div style={{ marginBottom: menuInfo?.label ? '40px' : '0' }}>
                   <Alert message="点击菜单列表任意一项后，可进行编辑" type="info" showIcon />
                 </div>
                 <div>
@@ -174,7 +192,7 @@ const MenuPage = () => {
                       <Form.Item
                         name="label"
                         label="名称"
-                        extra="这是关于该字段的一些说明."
+                        extra="菜单的名称，要求全局唯一，避免干扰，影响用户体验。"
                         rules={[
                           {
                             required: true,
@@ -185,7 +203,7 @@ const MenuPage = () => {
                       <Form.Item
                         name="key"
                         label="路径"
-                        extra="这是关于该字段的一些说明."
+                        extra="菜单的路径，也就是访问的路由，要求全局唯一，路径以 / 开头，如果是子菜单，需要拼接上父级菜单路由。"
                         rules={[
                           {
                             required: true,
@@ -193,27 +211,30 @@ const MenuPage = () => {
                         ]}>
                         <Input />
                       </Form.Item>
-                      <Form.Item
-                        name="icon"
-                        label="图标"
-                        extra="这是关于该字段的一些说明."
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}>
+                      <Form.Item name="icon" label="图标" extra="菜单显示的图标，只需要图标名称，只有顶级菜单需要填写，图标来源于 ANT DESIGN ICON。">
                         <Input />
                       </Form.Item>
+                      <Form.Item name="sort" label="排序" extra="同一级菜单的排序，数字越小越靠前，具体数字推荐参考父菜单。">
+                        <InputNumber style={{ width: '100%' }} />
+                      </Form.Item>
                       <Form.Item
-                        name="parent"
+                        name="parent_id"
                         label="父级菜单"
-                        extra="这是关于该字段的一些说明."
+                        extra="如果是顶级菜单，请单独选择顶级菜单，如果是子菜单，建议子菜单的层级不要超过两层。"
                         rules={[
                           {
                             required: true,
                           },
                         ]}>
-                        <Input />
+                        <Select
+                          showSearch
+                          placeholder="选择父级菜单"
+                          optionFilterProp="children"
+                          onChange={onParentMenuChange}
+                          onSearch={onParentMenuSearch}
+                          filterOption={parentMenuFilterOption}
+                          options={parentMenuSelectItems}
+                        />
                       </Form.Item>
                       <Form.Item {...tailLayout}>
                         <Space>
@@ -227,7 +248,7 @@ const MenuPage = () => {
                       </Form.Item>
                     </Form>
                   ) : (
-                    <Form form={form}></Form>
+                    <Form form={form}></Form> // 避免第一次访问 form 没被使用提示
                   )}
                 </div>
               </div>
