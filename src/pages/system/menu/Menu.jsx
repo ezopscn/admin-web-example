@@ -214,8 +214,8 @@ const MenuPage = () => {
                       <Form.Item name="icon" label="图标" extra="菜单显示的图标，只需要图标名称，只有顶级菜单需要填写，图标来源于 ANT DESIGN ICON。">
                         <Input />
                       </Form.Item>
-                      <Form.Item name="sort" label="排序" extra="同一级菜单的排序，数字越小越靠前，具体数字推荐参考父菜单。">
-                        <InputNumber style={{ width: '100%' }} />
+                      <Form.Item name="sort" label="排序" extra="同一级菜单的排序，支持 0-100，数字越小越靠前，具体数字推荐参考父菜单。">
+                        <InputNumber min={0} max={100} defaultValue={0} style={{ width: '100%' }} />
                       </Form.Item>
                       <Form.Item
                         name="parent_id"
