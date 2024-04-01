@@ -76,7 +76,7 @@ const LoginPage = () => {
                   <Form
                     name="login"
                     initialValues={{
-                      remember: true,
+                      remember: true
                     }}
                     onFinish={loginHandler}>
                     <Form.Item
@@ -85,10 +85,12 @@ const LoginPage = () => {
                       rules={[
                         {
                           required: true,
-                          message: '请输入您的用户名!',
-                        },
+                          message: '请输入您的用户名!'
+                        }
                       ]}>
-                      <Input autoComplete="off" className="login-input" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名 / 手机号 / Email" />
+                      <Input autoComplete="off" className="login-input"
+                             prefix={<UserOutlined className="site-form-item-icon" />}
+                             placeholder="用户名 / 手机号 / Email" />
                     </Form.Item>
                     <Form.Item
                       className="login-form-item"
@@ -96,16 +98,19 @@ const LoginPage = () => {
                       rules={[
                         {
                           required: true,
-                          message: '请输入您的密码!',
-                        },
+                          message: '请输入您的密码!'
+                        }
                       ]}>
-                      <Input.Password autoComplete="off" className="login-input" prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="密码" />
+                      <Input.Password autoComplete="off" className="login-input"
+                                      prefix={<LockOutlined className="site-form-item-icon" />} type="password"
+                                      placeholder="密码" />
                     </Form.Item>
 
                     {/*手机令牌方式*/}
                     {towFAStatus ? (
                       <Form.Item className="login-form-item" style={{ marginBottom: '15px' }} name="verification_code">
-                        <Input autoComplete="off" className="login-input" prefix={<InsuranceOutlined />} placeholder="手机令牌验证码，第一次登录不填" />
+                        <Input autoComplete="off" className="login-input" prefix={<InsuranceOutlined />}
+                               placeholder="手机令牌验证码，第一次登录不填" />
                       </Form.Item>
                     ) : null}
 
@@ -173,7 +178,8 @@ const LoginPage = () => {
                 <img src={GoogleAuthLogo} alt="" />
                 <div className="admin-download-link">
                   <span>Google Authenticator</span>
-                  <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh&gl=US">
+                  <a target="_blank"
+                     href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh&gl=US">
                     安卓版
                   </a>
                   <span>/</span>
@@ -186,7 +192,8 @@ const LoginPage = () => {
                 <img src={MicrosoftAuthLogo} alt="" />
                 <div className="admin-download-link">
                   <span>Microsoft Authenticator</span>
-                  <a target="_blank" href="https://play.google.com/store/apps/details?id=com.azure.authenticator&hl=zh&gl=US">
+                  <a target="_blank"
+                     href="https://play.google.com/store/apps/details?id=com.azure.authenticator&hl=zh&gl=US">
                     安卓版
                   </a>
                   <span>/</span>

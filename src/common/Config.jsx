@@ -18,8 +18,11 @@ const APIConfig = {
   // 菜单相关
   CurrentRoleMenuListAPI: backendUrl + '/menu/list', // 当前角色菜单列表接口
   AllMenuAPI: backendUrl + '/menu/all', // 获取所有菜单接口
+  AddMenuAPI: backendUrl + '/menu', // 添加菜单接口
+  UpdateMenuAPI: backendUrl + '/menu', // 编辑菜单接口
+  DeleteMenuAPI: backendUrl + '/menu/', // 删除菜单接口
   // 部门相关
-  DepartmentListAPI: backendUrl + '/department/list', // 获取部门列表接口
+  DepartmentListAPI: backendUrl + '/department/list' // 获取部门列表接口
 };
 
 export { APIConfig };

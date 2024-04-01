@@ -134,10 +134,10 @@ const AdminLayoutPage = () => {
           {CurrentUserInfo?.cn_name}（{CurrentUserInfo?.en_name}）
         </a>
       ),
-      disabled: true,
+      disabled: true
     },
     {
-      type: 'divider',
+      type: 'divider'
     },
     {
       key: '2',
@@ -149,7 +149,7 @@ const AdminLayoutPage = () => {
           }}>
           个人中心
         </a>
-      ),
+      )
     },
     {
       key: '3',
@@ -157,8 +157,8 @@ const AdminLayoutPage = () => {
         <a rel="noopener noreferrer" onClick={logoutHandler}>
           注销登录
         </a>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -166,7 +166,8 @@ const AdminLayoutPage = () => {
       <div className="admin-layout-logo" style={{ width: collapsed ? menuCollapsedWidth + 'px' : menuWidth + 'px' }}>
         <img src={collapsed ? Logo : LogoWithWhiteTitle} alt="" />
       </div>
-      <Sider className="admin-sider" width={menuWidth} collapsedWidth={menuCollapsedWidth} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <Sider className="admin-sider" width={menuWidth} collapsedWidth={menuCollapsedWidth} collapsible
+             collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <Menu
           className="admin-sider-menu"
           theme="dark"
@@ -190,7 +191,8 @@ const AdminLayoutPage = () => {
       <Layout>
         <Header className="admin-header">
           <div className="admin-header-left">
-            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
+            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={() => setCollapsed(!collapsed)} />
           </div>
           <div className="admin-header-right">
             <div className="admin-header-dropdown">

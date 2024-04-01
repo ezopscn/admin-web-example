@@ -25,9 +25,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         // motion: false, // 关闭动画
         fontFamily: 'MiSans, serif', // 文字字体
         fontSize: 13, // 默认字号
-        controlHeight: 30, // 按钮和输入框等基础控件的高度
-      },
+        controlHeight: 30 // 按钮和输入框等基础控件的高度
+      }
     }}>
     <App />
-  </ConfigProvider>,
+  </ConfigProvider>
 );

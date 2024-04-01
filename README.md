@@ -21,6 +21,9 @@
 # 自动格式化代码
 npm install -g prettier
 
+# 解决控制它提示：[Violation] Added non-passive xxx
+npm i default-passive-events
+
 # 字体
 npm i misans
 
