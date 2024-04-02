@@ -26,6 +26,10 @@ const RouteData = [
             element: RouteLazyLoad(React.lazy(() => import('../pages/system/department/Department.jsx')))
           },
           {
+            path: 'job',
+            element: RouteLazyLoad(React.lazy(() => import('../pages/system/job/Job.jsx')))
+          },
+          {
             path: 'user',
             element: RouteLazyLoad(React.lazy(() => import('../pages/system/user/User.jsx')))
           },

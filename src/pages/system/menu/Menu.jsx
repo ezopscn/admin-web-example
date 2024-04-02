@@ -6,7 +6,6 @@ import { AddMenuRequest, DeleteMenuRequest, GETAllMenuRequest, UpdateMenuRequest
 import { GenerateMenuTreeData } from '../../../utils/MenuTree.jsx';
 import { useNavigate } from 'react-router';
 
-const { confirm } = Modal;
 const { Search } = Input;
 const { DirectoryTree } = Tree;
 
@@ -35,15 +34,18 @@ const Title = '菜单管理 / MENU MANAGEMENT';
 const PageHeaderTips = () => {
   return (
     <ul>
-      <li>管理用户可以对菜单进行添加，修改，删除等，但需要注意，如果该菜单下面还有角色绑定，则该菜单无法删除。</li>
-      <li>系统预留的超级管理员角色无需授权菜单权限，默认自动拥有所有菜单的权限。同样的，访客角色也无法修改其菜单授权，默认为最小菜单授权。</li>
-      <li>如果用户所在的角色对该菜单没有权限，那么即使他知道菜单的连接地址，系统也会返回 403 FORBIDDEN。</li>
+      <li>用户可以对菜单进行添加，修改，删除等操作，但需要注意：
+        <ul>
+          <li>菜单删除属于危险操作，为了保证系统数据安全性，菜单删除属于软删除，数据库中的数据不会真正的被删除，这也导致如果后续新添加一个同名的或者同路径的菜单时，系统会提示添加失败。</li>
+          <li>如果遇到该问题，用户需要联系系统管理员对数据库中已删除的同名或者同路径的菜单数据进行修改调整，以此避免和新增的菜单发生冲突。</li>
+        </ul>
+      </li>
       <li>
         菜单图标来源于
         <a href="https://ant-design.antgroup.com/components/icon-cn" target="_blank">
           <b> ANT DESIGN ICON </b>
         </a>
-        名称，只有名称正确了，页面上才能正常的显示。子菜单不推荐配置图标，会影响整体视觉效果。
+        名称（比如 <b>HomeOutlined</b>），只有名称正确了，页面上才能正常的显示。需要注意：为了界面美观，顶级菜单必需配置图标，子菜单则不允许配置图标。
       </li>
     </ul>
   );
@@ -57,10 +59,10 @@ const MenuPage = () => {
 
   // 提示说明信息
   const formExtra = {
-    label: '菜单名称，要求全局唯一，避免干扰，影响用户体验。',
+    label: '菜单显示名称，要求全局唯一，避免干扰，影响用户体验。',
     key: '菜单访问路由，要求全局唯一，如果是子菜单，需要拼接上父级菜单路由。',
     icon: '菜单图标名称，只有顶级菜单需要填写，图标来源于 ANT DESIGN ICON。',
-    sort: '同一级菜单的排序，支持 0-100，数字越小越靠前，具体数字推荐参考同级菜单。',
+    sort: '菜单排列排序，支持 0-100，数字越小越靠前，具体数字推荐参考同级菜单。',
     parent: '顶级菜单直接选择顶级菜单，子菜单则层级不推荐超过两层。'
   };
 
@@ -129,10 +131,26 @@ const MenuPage = () => {
     setExpandedKeys(keys);
   };
 
+  // 在第一次渲染时,设置所有节点的 key 为 expandedKeys
+  useEffect(() => {
+    let keys = getNotLeafKeys(treeData);
+    setExpandedKeys(keys);
+  }, [treeData.length]);
+
   ///////////////////////////////////////////////////////////////////////////
   // 菜单搜索
   ///////////////////////////////////////////////////////////////////////////
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  // 搜索
+  const onSearch = (value) => setSearchKeyword(value);
+  // 搜索结果筛选，默认筛选中的样式有问题，需要自己加 css 样式
+  const filterTreeNode = (treeNode) => {
+    if (searchKeyword === '') {
+      return false;
+    }
+    return treeNode?.title.indexOf(searchKeyword) > -1;
+  };
+
 
   ///////////////////////////////////////////////////////////////////////////
   // 编辑菜单相关
@@ -255,8 +273,9 @@ const MenuPage = () => {
                   <Search placeholder="输入菜单名称进行搜索" variant="borderless" onSearch={onSearch} />
                 </div>
                 <div>
-                  <DirectoryTree multiple defaultExpandAll expandedKeys={expandedKeys} onSelect={onSelect}
-                                 onExpand={onMenuTreeExpand} treeData={treeData} />
+                  <DirectoryTree showLine multiple onSelect={onSelect} expandedKeys={expandedKeys}
+                                 onExpand={onMenuTreeExpand}
+                                 treeData={treeData} filterTreeNode={filterTreeNode} />
                 </div>
               </div>
             </div>
@@ -266,7 +285,7 @@ const MenuPage = () => {
               <div className="admin-content-header">编辑菜单</div>
               <div className="admin-content-box">
                 <div style={{ marginBottom: menuInfo?.label ? '40px' : '0' }}>
-                  <Alert message="点击菜单列表任意一项后，可进行编辑" type="info" showIcon />
+                  <Alert message="点击左侧菜单列表中的任意一项后，则可对该菜单进行编辑" type="info" showIcon />
                 </div>
                 <div>
                   {menuInfo?.label ? (
@@ -300,7 +319,7 @@ const MenuPage = () => {
                         <Space>
                           <Button type="primary" htmlType="submit">保存修改</Button>
                           <Popconfirm
-                            title="是否确定永久的删除该菜单？"
+                            title="是否确定删除该菜单？"
                             okText="确定"
                             okType="danger"
                             cancelText="取消"

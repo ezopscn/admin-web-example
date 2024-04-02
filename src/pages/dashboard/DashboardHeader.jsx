@@ -122,7 +122,7 @@ const DashboardHeaderPage = () => {
         <div className="admin-dashboard-header-info">
           <div className="admin-dashboard-header-hello">{helloWord}</div>
           <div className="admin-dashboard-header-job">
-            {CurrentUserInfo?.job_name} | {departmentName}
+            {CurrentUserInfo?.job?.name} | {departmentName}
           </div>
         </div>
       </div>
