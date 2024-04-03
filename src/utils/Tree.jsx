@@ -39,7 +39,7 @@ function GenerateMenuTree(parentId, menus) {
   return tree;
 }
 
-// 生成 Tree 结构的菜单树
+// 生成 Menu Tree 数据结构
 function GenerateMenuTreeData(parentId, menus) {
   const tree = [];
   for (const menu of menus) {
@@ -61,4 +61,43 @@ function GenerateMenuTreeData(parentId, menus) {
   return tree;
 }
 
-export { ConvertTextToIcon, GenerateMenuTree, GenerateMenuTreeData };
+// 生成 Tree 数据结构
+function GenerateTreeData(parentId, dataList) {
+  const tree = [];
+  for (const each of dataList) {
+    if (each.parent_id === parentId) {
+      const newObj = {
+        title: each.name,
+        key: each.id,
+        children: each.children
+      };
+      newObj.children = GenerateTreeData(each.id, dataList);
+      if (newObj.children.length === 0) {
+        newObj.isLeaf = true;
+        delete newObj.children;
+      }
+      tree.push(newObj);
+    }
+  }
+  return tree;
+}
+
+
+// 获取所有父级 Key，用于展开树型结构
+const GetNotLeafKeys = (treeData) => {
+  const keys = [];
+
+  function traverse(data) {
+    for (const node of data) {
+      if (!node.isLeaf) {
+        keys.push(node.key);
+        traverse(node.children);
+      }
+    }
+  }
+
+  traverse(treeData);
+  return keys;
+};
+
+export { ConvertTextToIcon, GenerateMenuTree, GenerateMenuTreeData, GenerateTreeData, GetNotLeafKeys };

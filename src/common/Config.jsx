@@ -13,6 +13,7 @@ const APIConfig = {
   UserCountAPI: backendUrl + '/user/count', // 用户总数接口
   CurrentUserInfoAPI: backendUrl + '/user/info', // 获取当前用户的信息
   SpecifyUserInfoAPI: backendUrl + '/user/info/', // 获取指定用户的信息
+  AllUserListAPI: backendUrl + '/user/all', // 获取所有用户基础信息列表
   // 角色相关
   RoleCountAPI: backendUrl + '/role/count', // 角色总数接口
   // 菜单相关

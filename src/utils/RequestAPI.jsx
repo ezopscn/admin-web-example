@@ -10,6 +10,7 @@ export const LogoutRequest = () => GET(APIConfig.LogoutAPI); // 用户注销
 export const GETUserCountRequest = () => GET(APIConfig.UserCountAPI); // 获取用户数量
 export const GETCurrentUserInfoRequest = () => GET(APIConfig.CurrentUserInfoAPI); // 获取当前用户的信息
 export const GETSpecifyUserInfoRequest = (username) => GET(APIConfig.SpecifyUserInfoAPI + username); // 获取指定用户的信息
+export const GETAllUserListRequest = () => GET(APIConfig.AllUserListAPI); // 获取所有用户基础信息列表
 
 // 角色相关接口
 export const GETRoleCountRequest = () => GET(APIConfig.RoleCountAPI); // 获取角色数量

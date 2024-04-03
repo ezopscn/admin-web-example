@@ -101,7 +101,12 @@ const DashboardHeaderPage = () => {
       try {
         const res = await GETDepartmentListRequest();
         if (res.code === 200) {
-          const name = getDepartmentName(CurrentUserInfo?.department_id, res.data?.list);
+          let name = '';
+          if (CurrentUserInfo) {
+            for (const dept of CurrentUserInfo?.departments) {
+              name = name + ' | ' + getDepartmentName(dept.id, res.data?.list);
+            }
+          }
           setDepartmentName(name);
         } else {
           message.error(res.message);
@@ -122,7 +127,7 @@ const DashboardHeaderPage = () => {
         <div className="admin-dashboard-header-info">
           <div className="admin-dashboard-header-hello">{helloWord}</div>
           <div className="admin-dashboard-header-job">
-            {CurrentUserInfo?.job?.name} | {departmentName}
+            {CurrentUserInfo?.job?.name}{departmentName}
           </div>
         </div>
       </div>

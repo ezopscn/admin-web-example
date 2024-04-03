@@ -3,7 +3,7 @@ import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
 import { Alert, App, Button, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Space, Tree } from 'antd';
 import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { AddMenuRequest, DeleteMenuRequest, GETAllMenuRequest, UpdateMenuRequest } from '../../../utils/RequestAPI.jsx';
-import { GenerateMenuTreeData } from '../../../utils/MenuTree.jsx';
+import { GenerateMenuTreeData, GetNotLeafKeys } from '../../../utils/Tree.jsx';
 import { useNavigate } from 'react-router';
 
 const { Search } = Input;
@@ -96,23 +96,6 @@ const MenuPage = () => {
   ///////////////////////////////////////////////////////////////////////////
   // 展开和收起菜单按钮
   ///////////////////////////////////////////////////////////////////////////
-  // 获取所有父级菜单的 Key，用于展开所有菜单
-  const getNotLeafKeys = (treeData) => {
-    const keys = [];
-
-    function traverse(data) {
-      for (const node of data) {
-        if (!node.isLeaf) {
-          keys.push(node.key);
-          traverse(node.children);
-        }
-      }
-    }
-
-    traverse(treeData);
-    return keys;
-  };
-
   // 所有菜单的展开和收起
   const [expandedKeys, setExpandedKeys] = useState([]);
   const handleAllMenuTreeExpand = () => {
@@ -121,7 +104,7 @@ const MenuPage = () => {
       setExpandedKeys([]);
     } else {
       // 展开菜单
-      let keys = getNotLeafKeys(treeData);
+      let keys = GetNotLeafKeys(treeData);
       setExpandedKeys(keys);
     }
   };
@@ -132,17 +115,22 @@ const MenuPage = () => {
   };
 
   // 在第一次渲染时,设置所有节点的 key 为 expandedKeys
-  useEffect(() => {
-    let keys = getNotLeafKeys(treeData);
-    setExpandedKeys(keys);
-  }, [treeData.length]);
+  // useEffect(() => {
+  //   let keys = GetNotLeafKeys(treeData);
+  //   setExpandedKeys(keys);
+  // }, [treeData.length]);
 
   ///////////////////////////////////////////////////////////////////////////
   // 菜单搜索
   ///////////////////////////////////////////////////////////////////////////
   const [searchKeyword, setSearchKeyword] = useState('');
   // 搜索
-  const onSearch = (value) => setSearchKeyword(value);
+  const onSearch = (value) => {
+    setSearchKeyword(value);
+    // 搜索的时候自动展开所有菜单
+    let keys = GetNotLeafKeys(treeData);
+    setExpandedKeys(keys);
+  };
   // 搜索结果筛选，默认筛选中的样式有问题，需要自己加 css 样式
   const filterTreeNode = (treeNode) => {
     if (searchKeyword === '') {
@@ -270,12 +258,12 @@ const MenuPage = () => {
               </div>
               <div className="admin-content-box">
                 <div className="admin-context-search">
-                  <Search placeholder="输入菜单名称进行搜索" variant="borderless" onSearch={onSearch} />
+                  <Search placeholder="输入菜单名称进行搜索" variant="borderless"
+                          onChange={(e) => onSearch(e.target.value)} />
                 </div>
                 <div>
                   <DirectoryTree showLine multiple onSelect={onSelect} expandedKeys={expandedKeys}
-                                 onExpand={onMenuTreeExpand}
-                                 treeData={treeData} filterTreeNode={filterTreeNode} />
+                                 onExpand={onMenuTreeExpand} treeData={treeData} filterTreeNode={filterTreeNode} />
                 </div>
               </div>
             </div>

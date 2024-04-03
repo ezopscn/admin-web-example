@@ -7,7 +7,7 @@ import { FooterText } from '../../common/Text.jsx';
 import { GETCurrentRoleMenuListRequest, GETCurrentUserInfoRequest, LogoutRequest } from '../../utils/RequestAPI.jsx';
 import { LayoutStates, UserStates } from '../../stores/Stores.jsx';
 import { useSnapshot } from 'valtio';
-import { GenerateMenuTree } from '../../utils/MenuTree.jsx';
+import { GenerateMenuTree } from '../../utils/Tree.jsx';
 
 const { Header, Content, Footer, Sider } = Layout;
 
