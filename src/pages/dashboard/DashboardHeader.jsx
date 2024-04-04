@@ -4,6 +4,7 @@ import { App, Avatar, Statistic } from 'antd';
 import { useSnapshot } from 'valtio';
 import { UserStates } from '../../stores/Stores.jsx';
 import { GETDepartmentListRequest, GETRoleCountRequest, GETUserCountRequest } from '../../utils/RequestAPI.jsx';
+import { GetDepartmentTreeName } from '../../utils/Tree.jsx';
 
 // 问候语
 function getHelloWord(name) {
@@ -28,23 +29,6 @@ function getHelloWord(name) {
     hello = hello + '，这个时候不是应该睡觉吗 ~';
   }
   return hello;
-}
-
-// 通过当前用户的部门 Id 获取所有父级部门的名称并拼接
-function getDepartmentName(currentDepartmentId, allDepartments) {
-  // 找到当前部门
-  const currentDepartment = allDepartments.find((department) => department.id === currentDepartmentId);
-  // 防止第一次加载报错
-  if (currentDepartment) {
-    // 如果当前部门没有父部门，则直接返回当前部门名称
-    if (currentDepartment.parent_id === 0) {
-      return currentDepartment.name;
-    }
-    // 递归获取父部门名称
-    const parentDepartmentName = getDepartmentName(currentDepartment.parent_id, allDepartments);
-    // 拼接部门名称
-    return `${parentDepartmentName} - ${currentDepartment?.name}`;
-  }
 }
 
 const DashboardHeaderPage = () => {
@@ -104,7 +88,7 @@ const DashboardHeaderPage = () => {
           let name = '';
           if (CurrentUserInfo) {
             for (const dept of CurrentUserInfo?.departments) {
-              name = name + ' | ' + getDepartmentName(dept.id, res.data?.list);
+              name = name + ' | ' + GetDepartmentTreeName(dept.id, res.data?.list);
             }
           }
           setDepartmentName(name);
@@ -127,7 +111,8 @@ const DashboardHeaderPage = () => {
         <div className="admin-dashboard-header-info">
           <div className="admin-dashboard-header-hello">{helloWord}</div>
           <div className="admin-dashboard-header-job">
-            {CurrentUserInfo?.job?.name}{departmentName}
+            {CurrentUserInfo?.job?.name}
+            {departmentName}
           </div>
         </div>
       </div>

@@ -5,6 +5,8 @@ import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/ic
 import { AddMenuRequest, DeleteMenuRequest, GETAllMenuRequest, UpdateMenuRequest } from '../../../utils/RequestAPI.jsx';
 import { GenerateMenuTreeData, GetNotLeafKeys } from '../../../utils/Tree.jsx';
 import { useNavigate } from 'react-router';
+import { useSnapshot } from 'valtio';
+import { UserStates } from '../../../stores/Stores.jsx';
 
 const { Search } = Input;
 const { DirectoryTree } = Tree;
@@ -12,19 +14,19 @@ const { DirectoryTree } = Tree;
 // 表单布局
 const layout = {
   labelCol: {
-    span: 5
+    span: 5,
   },
   wrapperCol: {
-    span: 19
-  }
+    span: 19,
+  },
 };
 
 // 表单按钮布局
 const tailLayout = {
   wrapperCol: {
     offset: 5,
-    span: 19
-  }
+    span: 19,
+  },
 };
 
 // 页面标题
@@ -34,10 +36,11 @@ const Title = '菜单管理 / MENU MANAGEMENT';
 const PageHeaderTips = () => {
   return (
     <ul>
-      <li>用户可以对菜单进行添加，修改，删除等操作，但需要注意：
+      <li>
+        用户可以对菜单进行添加，修改等操作，但需要注意：
         <ul>
-          <li>菜单删除属于危险操作，为了保证系统数据安全性，菜单删除属于软删除，数据库中的数据不会真正的被删除，这也导致如果后续新添加一个同名的或者同路径的菜单时，系统会提示添加失败。</li>
-          <li>如果遇到该问题，用户需要联系系统管理员对数据库中已删除的同名或者同路径的菜单数据进行修改调整，以此避免和新增的菜单发生冲突。</li>
+          <li>菜单删除属于危险操作，为了保证系统数据安全性，只有系统预留的超级管理员角色才具备该权限。同时删除也只是软删除，数据库中的数据依然存在。</li>
+          <li>这也导致如果后续新添加一个同名的或同路径的菜单时，系统会提示添加失败。遇到该问题，可以联系系统管理员对数据库中已删除的同名或同路径的菜单数据的字段进行修改调整，避免冲突。</li>
         </ul>
       </li>
       <li>
@@ -51,11 +54,11 @@ const PageHeaderTips = () => {
   );
 };
 
-
 // 参考页面：https://arco.naiveadmin.com/system/menu
 const MenuPage = () => {
   const { message } = App.useApp();
   const navigate = useNavigate();
+  const { CurrentUserInfo } = useSnapshot(UserStates);
 
   // 提示说明信息
   const formExtra = {
@@ -63,7 +66,7 @@ const MenuPage = () => {
     key: '菜单访问路由，要求全局唯一，如果是子菜单，需要拼接上父级菜单路由。',
     icon: '菜单图标名称，只有顶级菜单需要填写，图标来源于 ANT DESIGN ICON。',
     sort: '菜单排列排序，支持 0-100，数字越小越靠前，具体数字推荐参考同级菜单。',
-    parent: '顶级菜单直接选择顶级菜单，子菜单则层级不推荐超过两层。'
+    parent: '顶级菜单直接选择顶级菜单，子菜单则层级不推荐超过两层。',
   };
 
   ///////////////////////////////////////////////////////////////////////////
@@ -100,10 +103,8 @@ const MenuPage = () => {
   const [expandedKeys, setExpandedKeys] = useState([]);
   const handleAllMenuTreeExpand = () => {
     if (expandedKeys.length) {
-      // 收起菜单
       setExpandedKeys([]);
     } else {
-      // 展开菜单
       let keys = GetNotLeafKeys(treeData);
       setExpandedKeys(keys);
     }
@@ -139,7 +140,6 @@ const MenuPage = () => {
     return treeNode?.title.indexOf(searchKeyword) > -1;
   };
 
-
   ///////////////////////////////////////////////////////////////////////////
   // 编辑菜单相关
   ///////////////////////////////////////////////////////////////////////////
@@ -149,8 +149,8 @@ const MenuPage = () => {
     try {
       const res = await UpdateMenuRequest(values);
       if (res.code === 200) {
-        message.success('菜单修改成功', 1).then(() => {
-          // 延时执行，避免出现 message 还没显示就刷新了
+        // 避免出现 message 还没显示就刷新了
+        message.success('菜单修改成功', 0.5).then(() => {
           navigate(0);
         });
       } else {
@@ -167,8 +167,7 @@ const MenuPage = () => {
     try {
       const res = await DeleteMenuRequest(id);
       if (res.code === 200) {
-        message.success('菜单删除成功', 1).then(() => {
-          // 延时执行，避免出现 message 还没显示就刷新了
+        message.success('菜单删除成功', 0.5).then(() => {
           navigate(0);
         });
       } else {
@@ -198,7 +197,7 @@ const MenuPage = () => {
       key: menuInfo?.key,
       icon: menuInfo?.icon,
       sort: menuInfo?.sort,
-      parent_id: menuInfo?.parent_id
+      parent_id: menuInfo?.parent_id,
     });
   }, [menuInfo]);
 
@@ -217,7 +216,7 @@ const MenuPage = () => {
   // 添加菜单相关
   ///////////////////////////////////////////////////////////////////////////
   const [addForm] = Form.useForm();
-  // 添加菜单菜单框状态
+  // 添加菜单框状态
   const [showMenuAddModal, setShowMenuAddModal] = useState(false);
 
   // 提交新增菜单
@@ -246,24 +245,24 @@ const MenuPage = () => {
           <Col className="admin-main-content-left" span={6}>
             <div className="admin-list">
               <div className="admin-content-header">
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => {
-                  setShowMenuAddModal(true);
-                }}>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => {
+                    setShowMenuAddModal(true);
+                  }}>
                   添加菜单
                 </Button>
-                <Button style={{ marginLeft: '10px' }} onClick={handleAllMenuTreeExpand}
-                        icon={expandedKeys.length ? <FolderOutlined /> : <FolderOpenOutlined />}>
+                <Button style={{ marginLeft: '10px' }} onClick={handleAllMenuTreeExpand} icon={expandedKeys.length ? <FolderOutlined /> : <FolderOpenOutlined />}>
                   {expandedKeys.length ? '收起菜单' : '展开菜单'}
                 </Button>
               </div>
               <div className="admin-content-box">
                 <div className="admin-context-search">
-                  <Search placeholder="输入菜单名称进行搜索" variant="borderless"
-                          onChange={(e) => onSearch(e.target.value)} />
+                  <Search placeholder="输入菜单名称进行搜索" variant="borderless" onChange={(e) => onSearch(e.target.value)} />
                 </div>
                 <div>
-                  <DirectoryTree showLine multiple onSelect={onSelect} expandedKeys={expandedKeys}
-                                 onExpand={onMenuTreeExpand} treeData={treeData} filterTreeNode={filterTreeNode} />
+                  <DirectoryTree showLine multiple onSelect={onSelect} expandedKeys={expandedKeys} onExpand={onMenuTreeExpand} treeData={treeData} filterTreeNode={filterTreeNode} />
                 </div>
               </div>
             </div>
@@ -293,28 +292,19 @@ const MenuPage = () => {
                       <Form.Item name="sort" label="排序" extra={formExtra.sort}>
                         <InputNumber min={0} max={100} style={{ width: '100%' }} />
                       </Form.Item>
-                      <Form.Item name="parent_id" label="父级菜单" extra={formExtra.parent}
-                                 rules={[{ required: true }]}>
-                        <Select
-                          showSearch
-                          placeholder="选择父级菜单"
-                          optionFilterProp="children"
-                          filterOption={parentMenuFilterOption}
-                          options={parentMenuSelectItems}
-                        />
+                      <Form.Item name="parent_id" label="父级菜单" extra={formExtra.parent} rules={[{ required: true }]}>
+                        <Select showSearch placeholder="选择父级菜单" optionFilterProp="children" filterOption={parentMenuFilterOption} options={parentMenuSelectItems} />
                       </Form.Item>
                       <Form.Item {...tailLayout}>
                         <Space>
-                          <Button type="primary" htmlType="submit">保存修改</Button>
-                          <Popconfirm
-                            title="是否确定删除该菜单？"
-                            okText="确定"
-                            okType="danger"
-                            cancelText="取消"
-                            onConfirm={() => onDeleteMenu(menuInfo?.id)}
-                          >
-                            <Button danger>删除菜单</Button>
-                          </Popconfirm>
+                          <Button type="primary" htmlType="submit">
+                            保存修改
+                          </Button>
+                          {CurrentUserInfo?.role_id === 1 ? (
+                            <Popconfirm title="是否确定删除该菜单？" okText="确定" okType="danger" cancelText="取消" onConfirm={() => onDeleteMenu(menuInfo?.id)}>
+                              <Button danger>删除菜单</Button>
+                            </Popconfirm>
+                          ) : null}
                         </Space>
                       </Form.Item>
                     </Form>
@@ -328,10 +318,8 @@ const MenuPage = () => {
         </Row>
       </div>
       {/*添加菜单表单*/}
-      <Modal title="添加菜单" className="admin-modal-form" centered open={showMenuAddModal} maskClosable={false}
-             footer={null} onCancel={() => (setShowMenuAddModal(false))}>
-        <Form form={addForm} name="add-menu" layout="vertical" onFinish={onAddFormFinish}
-              style={{ marginTop: '25px' }}>
+      <Modal title="添加菜单" className="admin-modal-form" centered open={showMenuAddModal} maskClosable={false} footer={null} onCancel={() => setShowMenuAddModal(false)}>
+        <Form form={addForm} name="add-menu" layout="vertical" onFinish={onAddFormFinish} style={{ marginTop: '25px' }}>
           <Form.Item name="label" label="名称" extra={formExtra.label} rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -345,16 +333,12 @@ const MenuPage = () => {
             <InputNumber min={0} max={100} style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item name="parent_id" label="父级菜单" extra={formExtra.parent} rules={[{ required: true }]}>
-            <Select
-              showSearch
-              placeholder="选择父级菜单"
-              optionFilterProp="children"
-              filterOption={parentMenuFilterOption}
-              options={parentMenuSelectItems}
-            />
+            <Select showSearch placeholder="选择父级菜单" optionFilterProp="children" filterOption={parentMenuFilterOption} options={parentMenuSelectItems} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>添加菜单</Button>
+            <Button type="primary" htmlType="submit" block>
+              添加菜单
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
