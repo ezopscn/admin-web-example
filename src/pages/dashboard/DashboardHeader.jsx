@@ -86,7 +86,7 @@ const DashboardHeaderPage = () => {
         const res = await GETDepartmentListRequest();
         if (res.code === 200) {
           let name = '';
-          if (CurrentUserInfo) {
+          if (CurrentUserInfo?.departments) {
             for (const dept of CurrentUserInfo?.departments) {
               name = name + ' | ' + GetDepartmentTreeName(dept.id, res.data?.list);
             }
