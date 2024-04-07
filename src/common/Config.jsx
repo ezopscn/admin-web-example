@@ -23,7 +23,10 @@ const APIConfig = {
   UpdateMenuAPI: backendUrl + '/menu', // 编辑菜单接口
   DeleteMenuAPI: backendUrl + '/menu/', // 删除菜单接口
   // 部门相关
-  DepartmentListAPI: backendUrl + '/department/list' // 获取部门列表接口
+  DepartmentListAPI: backendUrl + '/department/list', // 获取部门列表接口
+  AddDepartmentAPI: backendUrl + '/department', // 添加部门接口
+  UpdateDepartmentAPI: backendUrl + '/department', // 编辑部门接口
+  DeleteDepartmentAPI: backendUrl + '/department/' // 删除部门接口
 };
 
 export { APIConfig };

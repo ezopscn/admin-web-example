@@ -24,3 +24,6 @@ export const DeleteMenuRequest = (id) => DELETE(APIConfig.DeleteMenuAPI + id); /
 
 // 部门相关接口
 export const GETDepartmentListRequest = () => GET(APIConfig.DepartmentListAPI); // 获取部门列表
+export const AddDepartmentRequest = (data) => PUT(APIConfig.AddDepartmentAPI, data); // 添加部门
+export const UpdateDepartmentRequest = (data) => PATCH(APIConfig.UpdateDepartmentAPI, data); // 编辑部门
+export const DeleteDepartmentRequest = (id) => DELETE(APIConfig.DeleteDepartmentAPI + id); // 删除部门

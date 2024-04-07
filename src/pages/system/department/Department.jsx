@@ -3,7 +3,12 @@ import { CommonPageHeader } from '../../../components/addons/Addons.jsx';
 import { Alert, App, Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Space, Tree } from 'antd';
 import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { GETAllUserListRequest, GETDepartmentListRequest } from '../../../utils/RequestAPI.jsx';
+import {
+  AddDepartmentRequest,
+  GETAllUserListRequest,
+  GETDepartmentListRequest,
+  UpdateDepartmentRequest
+} from '../../../utils/RequestAPI.jsx';
 import { GenerateTreeData, GetNotLeafKeys } from '../../../utils/Tree.jsx';
 import { useSnapshot } from 'valtio';
 import { UserStates } from '../../../stores/Stores.jsx';
@@ -14,19 +19,19 @@ const { DirectoryTree } = Tree;
 // 表单布局
 const layout = {
   labelCol: {
-    span: 5,
+    span: 5
   },
   wrapperCol: {
-    span: 19,
-  },
+    span: 19
+  }
 };
 
 // 表单按钮布局
 const tailLayout = {
   wrapperCol: {
     offset: 5,
-    span: 19,
-  },
+    span: 19
+  }
 };
 
 // 页面标题
@@ -63,7 +68,7 @@ const DepartmentPage = () => {
   const formExtra = {
     name: '部门名称，没有唯一限制，但是尽可能不重复。',
     parent: '父级部门，最高级别的部门就是公司本身，不推荐多个平级公司存在。',
-    manager: '部门负责人，并非所有部门的部门都需要配置部门负责人。',
+    manager: '部门负责人，并非所有部门的部门都需要配置部门负责人。'
   };
 
   ///////////////////////////////////////////////////////////////////////////
@@ -166,16 +171,36 @@ const DepartmentPage = () => {
   // 编辑菜单相关
   ///////////////////////////////////////////////////////////////////////////
   const [editForm] = Form.useForm();
-  const onEditFormFinish = (values) => {};
+  const onEditFormFinish = async (values) => {
+    try {
+      const res = await UpdateDepartmentRequest(values);
+      if (res.code === 200) {
+        message.success('部门修改成功', 1).then(() => {
+          navigate(0);
+        });
+      } else {
+        message.error(res.message);
+      }
+    } catch (e) {
+      console.log(e);
+      message.error('服务器异常，请联系管理员');
+    }
+  };
 
-  const onDeleteDepartment = (id) => {};
+  const onDeleteDepartment = (id) => {
+  };
 
   // 编辑菜单初始化回填表单数据
   useEffect(() => {
+    let ids = [];
+    if (departmentInfo?.manage_users?.length) {
+      ids = Object.keys(departmentInfo?.manage_users).map(key => departmentInfo?.manage_users[key].id);
+    }
     editForm.setFieldsValue({
       id: departmentInfo?.id,
       name: departmentInfo?.name,
       parent_id: departmentInfo?.parent_id,
+      manage_users: ids
     });
   }, [departmentInfo]);
 
@@ -193,7 +218,7 @@ const DepartmentPage = () => {
     for (const user of userList) {
       manageUserSelectItems.push({
         label: user.cn_name + '/' + user.en_name + '（' + user.username + '）',
-        value: user.id,
+        value: user.id
       });
     }
   }
@@ -210,7 +235,22 @@ const DepartmentPage = () => {
   // 添加部门框状态
   const [showDepartmentAddModal, setShowDepartmentAddModal] = useState(false);
 
-  const onAddFormFinish = (values) => {};
+  const onAddFormFinish = async (values) => {
+    try {
+      const res = await AddDepartmentRequest(values);
+      if (res.code === 200) {
+        message.success('部门添加成功', 1).then(() => {
+          // 延时执行，避免出现 message 还没显示就刷新了
+          navigate(0);
+        });
+      } else {
+        message.error(res.message);
+      }
+    } catch (e) {
+      console.log(e);
+      message.error('服务器异常，请联系管理员');
+    }
+  };
 
   return (
     <>
@@ -228,16 +268,19 @@ const DepartmentPage = () => {
                   }}>
                   添加部门
                 </Button>
-                <Button style={{ marginLeft: '10px' }} onClick={handleAllTreeExpand} icon={expandedKeys.length ? <FolderOutlined /> : <FolderOpenOutlined />}>
+                <Button style={{ marginLeft: '10px' }} onClick={handleAllTreeExpand}
+                        icon={expandedKeys.length ? <FolderOutlined /> : <FolderOpenOutlined />}>
                   {expandedKeys.length ? '收起部门' : '展开部门'}
                 </Button>
               </div>
               <div className="admin-content-box">
                 <div className="admin-context-search">
-                  <Search placeholder="输入部门名称进行搜索" variant="borderless" onChange={(e) => onSearch(e.target.value)} />
+                  <Search placeholder="输入部门名称进行搜索" variant="borderless"
+                          onChange={(e) => onSearch(e.target.value)} />
                 </div>
                 <div>
-                  <DirectoryTree showLine multiple treeData={treeData} onExpand={onTreeExpand} expandedKeys={expandedKeys} filterTreeNode={filterTreeNode} onSelect={onSelect} />
+                  <DirectoryTree showLine multiple treeData={treeData} onExpand={onTreeExpand}
+                                 expandedKeys={expandedKeys} filterTreeNode={filterTreeNode} onSelect={onSelect} />
                 </div>
               </div>
             </div>
@@ -258,11 +301,14 @@ const DepartmentPage = () => {
                       <Form.Item name="name" label="部门名称" extra={formExtra.name} rules={[{ required: true }]}>
                         <Input />
                       </Form.Item>
-                      <Form.Item name="parent_id" label="父级部门" extra={formExtra.parent} rules={[{ required: true }]}>
-                        <Select showSearch placeholder="选择父级部门" optionFilterProp="children" filterOption={parentDepartmentFilterOption} options={parentDepartmentSelectItems} />
+                      <Form.Item name="parent_id" label="父级部门" extra={formExtra.parent}
+                                 rules={[{ required: true }]}>
+                        <Select showSearch placeholder="选择父级部门" optionFilterProp="children"
+                                filterOption={parentDepartmentFilterOption} options={parentDepartmentSelectItems} />
                       </Form.Item>
-                      <Form.Item name="manager" label="部门负责人" extra={formExtra.manager}>
-                        <Select showSearch mode="multiple" placeholder="选择部门负责人" optionFilterProp="children" filterOption={manageUserFilterOption} options={manageUserSelectItems} />
+                      <Form.Item name="manage_users" label="部门负责人" extra={formExtra.manager}>
+                        <Select showSearch mode="multiple" placeholder="选择部门负责人" optionFilterProp="children"
+                                filterOption={manageUserFilterOption} options={manageUserSelectItems} />
                       </Form.Item>
                       <Form.Item {...tailLayout}>
                         <Space>
@@ -270,7 +316,8 @@ const DepartmentPage = () => {
                             保存修改
                           </Button>
                           {CurrentUserInfo?.role_id === 1 ? (
-                            <Popconfirm title="是否确定删除该部门？" okText="确定" okType="danger" cancelText="取消" onConfirm={() => onDeleteDepartment(departmentInfo?.id)}>
+                            <Popconfirm title="是否确定删除该部门？" okText="确定" okType="danger" cancelText="取消"
+                                        onConfirm={() => onDeleteDepartment(departmentInfo?.id)}>
                               <Button danger>删除部门</Button>
                             </Popconfirm>
                           ) : null}
@@ -287,16 +334,15 @@ const DepartmentPage = () => {
         </Row>
       </div>
       {/*添加部门表单*/}
-      <Modal title="添加部门" className="admin-modal-form" centered open={showDepartmentAddModal} maskClosable={false} footer={null} onCancel={() => setShowDepartmentAddModal(false)}>
+      <Modal title="添加部门" className="admin-modal-form" centered open={showDepartmentAddModal} maskClosable={false}
+             footer={null} onCancel={() => setShowDepartmentAddModal(false)}>
         <Form form={addForm} name="add-menu" layout="vertical" onFinish={onAddFormFinish} style={{ marginTop: '25px' }}>
-          <Form.Item name="id" label="id" hidden>
-            <Input />
-          </Form.Item>
           <Form.Item name="name" label="部门名称" extra={formExtra.name} rules={[{ required: true }]}>
             <Input />
           </Form.Item>
           <Form.Item name="parent_id" label="父级部门" extra={formExtra.parent} rules={[{ required: true }]}>
-            <Select showSearch placeholder="选择父级部门" optionFilterProp="children" filterOption={parentDepartmentFilterOption} options={parentDepartmentSelectItems} />
+            <Select showSearch placeholder="选择父级部门" optionFilterProp="children"
+                    filterOption={parentDepartmentFilterOption} options={parentDepartmentSelectItems} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
